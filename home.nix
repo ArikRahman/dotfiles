@@ -23,6 +23,15 @@
       configFile.source = ./config.nu;
       # for editing directly to config.nu
       extraConfig = ''
+        def --env y [...args] {
+          let tmp = (mktemp -t "yazi-cwd.XXXXXX")
+          yazi ...$args --cwd-file $tmp
+          let cwd = (open $tmp)
+          if $cwd != "" and $cwd != $env.PWD {
+            cd $cwd
+          }
+          rm -fp $tmp
+        }
         let carapace_completer = {|spans|
         carapace $spans.0 nushell ...$spans | from json
         }
@@ -47,16 +56,30 @@
         prepend /home/myuser/.apps |
         append /usr/bin/env
         )
+
       '';
       shellAliases = {
         vi = "hx";
         vim = "hx";
+        lz = "lazygit";
         # nano = "hx";
       };
     };
     carapace.enable = true;
     carapace.enableNushellIntegration = true;
 
+    yazi.enable = true;
+    zoxide.enable = true;
+
+    atuin = {
+      enable = true;
+      settings = {
+        #auto_sync = true;
+        #sync_frequency = "5m";
+        #sync_address = "https://api.atuin.sh";
+        search_mode = "fuzzy";
+      };
+    };
     starship = {
       enable = true;
       settings = {
@@ -76,8 +99,10 @@
     nil
     nixd
     lazygit
-    neohtop
+    #neohtop
     fastfetch
+    zoxide
+
   ];
 
 }
