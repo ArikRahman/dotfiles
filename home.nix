@@ -12,5 +12,6 @@
     nixd
     lazygit
     neohtop
+    fastfetch
   ];
 }
