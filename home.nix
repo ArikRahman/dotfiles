@@ -7,9 +7,15 @@
 
   # Enable Nushell
   programs.nushell.enable = true;
-  programs.nushell.config = ''
-    alias lz = lazygit
-  '';
+  # programs.nushell.plugins = with pkgs.nushellPlugins; [
+  #   nu-bookmarks
+  #   nu-fetch
+  #   nu-history
+  #   nu-ls
+  #   nu-nix
+  #   nu-pkgs
+  #   nu-web-get
+  # ];
 
   # example packages
   home.packages = with pkgs; [
