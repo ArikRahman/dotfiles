@@ -11,5 +11,6 @@
     nil
     nixd
     lazygit
+    neohtop
   ];
 }
