@@ -20,9 +20,12 @@
     nushell = {
       enable = true;
       # The config.nu can be anywhere you want if you like to edit your Nushell with Nu
-      configFile.source = ./config.nu;
+      # Would put it in the same directory but may as well omit it to keep slim
+      # configFile.source = ./config.nu;
       # for editing directly to config.nu
       extraConfig = ''
+
+        #yazi 'y' alias
         def --env y [...args] {
           let tmp = (mktemp -t "yazi-cwd.XXXXXX")
           yazi ...$args --cwd-file $tmp
@@ -32,6 +35,7 @@
           }
           rm -fp $tmp
         }
+        #end
         let carapace_completer = {|spans|
         carapace $spans.0 nushell ...$spans | from json
         }
@@ -100,6 +104,7 @@
     nixd
     lazygit
     #neohtop
+    # ^ doesn't seem to work as an application
     fastfetch
     zoxide
 
