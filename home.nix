@@ -17,6 +17,10 @@
   #   nu-web-get
   # ];
   programs = {
+    doom-emacs = {
+      enable = true;
+      doomDir = ./.doom.d; # or e.g. `./doom.d` for a local configuration
+    };
     nushell = {
       enable = true;
       # The config.nu can be anywhere you want if you like to edit your Nushell with Nu
