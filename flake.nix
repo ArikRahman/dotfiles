@@ -1,5 +1,5 @@
 {
-  description = "Arik's Flake.nix";
+  description = "Arik's Flakes";
 
   # Flake inputs
   inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # Stable Nixpkgs (use 0.1 for unstable)
@@ -8,6 +8,7 @@
     #nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nix-doom-emacs-unstraightened.url = "github:marienz/nix-doom-emacs-unstraightened";
     nix-doom-emacs-unstraightened.inputs.nixpkgs.follows = "";
+    #inputs.zed.url = "github:zed-industries/zed";
     home-manager = {
       url = "github:nix-community/home-manager";
 
@@ -55,6 +56,7 @@
       # nix develop
       # Or if you use direnv:
       # direnv allow
+      # packages.${system}.zed-latest = zed.packages.${system}.default;
       devShells = forEachSupportedSystem (
         { pkgs, system }:
         {
@@ -92,7 +94,7 @@
       # --- Add this block below ---
       homeConfigurations = {
         "arik" = home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs { system = "aarch64-darwin"; };
+          pkgs = import nixpkgs { system = "aarch64-linux"; };
           modules = [
             inputs.nix-doom-emacs-unstraightened.homeModule
             ./home.nix
