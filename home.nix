@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   home.username = "arik";
-  home.homeDirectory = "/Users/arik";
+  home.homeDirectory = "/home/arik";
   home.stateVersion = "25.05";
   programs.home-manager.enable = true;
 
@@ -17,6 +17,19 @@
   #   nu-web-get
   # ];
   programs = {
+	zed-editor = {
+  enable = true;
+  extensions = [ "nix" "toml" "rust" ];
+  userSettings = {
+    theme = {
+      mode = "system";
+      dark = "One Dark";
+      light = "One Light";
+    };
+    hour_format = "hour24";
+    vim_mode = true;
+  };
+};
     doom-emacs = {
       enable = true;
       doomDir = ./.doom.d; # or e.g. `./doom.d` for a local configuration
@@ -111,7 +124,9 @@
     # ^ doesn't seem to work as an application
     fastfetch
     zoxide
-
+    zed-editor
+    vulkan-tools
+    github-desktop
   ];
 
 }
