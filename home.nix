@@ -113,6 +113,14 @@
     fastfetch
     zoxide
     discordo
+    just
+    fzf
+    fd
+    ripgrep
+    bat
+    dust
+    tree
+    git
 
   ];
 
