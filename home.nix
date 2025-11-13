@@ -24,7 +24,15 @@
       enable = true;
       extensions = with pkgs.vscode-extensions; [
         dracula-theme.theme-dracula
-        vscodevim.vim
+        #vscodevim.vim
+        #Have to use this command:
+        #home-manager switch --flake . --impure
+
+        #found out from 
+        #code --verbose ./
+
+        #to use
+        # code ./ --no-sandbox
         yzhang.markdown-all-in-one
       ];
     };
