@@ -184,5 +184,14 @@
     # vscodium
     # vscode
     # zed-editor
+    discordo
+    just
+    fzf
+    fd
+    ripgrep
+    bat
+    dust
+    tree
+    git
   ];
 }
