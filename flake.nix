@@ -6,8 +6,8 @@
 
   inputs = {
     #nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nix-doom-emacs-unstraightened.url = "github:marienz/nix-doom-emacs-unstraightened";
-    nix-doom-emacs-unstraightened.inputs.nixpkgs.follows = "";
+    #nix-doom-emacs-unstraightened.url = "github:marienz/nix-doom-emacs-unstraightened";
+    #nix-doom-emacs-unstraightened.inputs.nixpkgs.follows = "";
     #inputs.zed.url = "github:zed-industries/zed";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -96,7 +96,7 @@
         "arik" = home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs { system = "aarch64-linux"; };
           modules = [
-            inputs.nix-doom-emacs-unstraightened.homeModule
+            #inputs.nix-doom-emacs-unstraightened.homeModule
             ./home.nix
           ];
           extraSpecialArgs = { inherit inputs; };

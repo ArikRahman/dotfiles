@@ -4,7 +4,7 @@
   home.homeDirectory = "/home/arik";
   home.stateVersion = "25.05";
   programs.home-manager.enable = true;
-
+	nixGL.vulkan.enable = true;
   # Enable Nushell
   #programs.nushell.enable = true;
   # programs.nushell.plugins = with pkgs.nushellPlugins; [
@@ -17,23 +17,23 @@
   #   nu-web-get
   # ];
   programs = {
-	zed-editor = {
-  enable = true;
-  extensions = [ "nix" "toml" "rust" ];
-  userSettings = {
-    theme = {
-      mode = "system";
-      dark = "One Dark";
-      light = "One Light";
-    };
-    hour_format = "hour24";
-    vim_mode = true;
-  };
-};
-    doom-emacs = {
-      enable = true;
-      doomDir = ./.doom.d; # or e.g. `./doom.d` for a local configuration
-    };
+#	zed-editor = {
+ # enable = true;
+  #extensions = [ "nix" "toml" "rust" ];
+  #userSettings = {
+   # theme = {
+    #  mode = "system";
+     # dark = "One Dark";
+      #light = "One Light";
+   # };
+ #   hour_format = "hour24";
+#    vim_mode = true;
+  #};
+#};
+#    doom-emacs = {
+ #     enable = false;
+  #    doomDir = ./.doom.d; # or e.g. `./doom.d` for a local configuration
+   # };
     nushell = {
       enable = true;
       # The config.nu can be anywhere you want if you like to edit your Nushell with Nu
@@ -117,16 +117,18 @@
   home.packages = with pkgs; [
     nixfmt-rfc-style
     cowsay
-    nil
-    nixd
+    #nil
+    #nixd
     lazygit
     #neohtop
     # ^ doesn't seem to work as an application
     fastfetch
     zoxide
-    zed-editor
+    #zed-editor
     vulkan-tools
-    github-desktop
+   # github-desktop
+    cachix
+   # zed-editor
   ];
 
 }
