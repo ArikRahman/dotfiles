@@ -33,6 +33,9 @@
 
         #to use
         # code ./ --no-sandbox
+
+        #Also need this command on nu
+        #$env.NIXPKGS_ALLOW_UNFREE = "1"
         yzhang.markdown-all-in-one
       ];
     };
