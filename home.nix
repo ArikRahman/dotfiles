@@ -17,6 +17,14 @@
   #   nu-web-get
   # ];
   programs = {
+vscode = {
+  enable = true;
+  extensions = with pkgs.vscode-extensions; [
+    dracula-theme.theme-dracula
+    vscodevim.vim
+    yzhang.markdown-all-in-one
+  ];
+};
 #	zed-editor = {
  # enable = true;
   #extensions = [ "nix" "toml" "rust" ];
@@ -128,6 +136,8 @@
     vulkan-tools
    # github-desktop
     cachix
+#    vscodium	
+   # vscode
    # zed-editor
   ];
 
