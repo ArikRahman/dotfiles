@@ -109,8 +109,10 @@
     lazygit
     #neohtop
     # ^ doesn't seem to work as an application
+    eza
     fastfetch
     zoxide
+    discordo
 
   ];
 
