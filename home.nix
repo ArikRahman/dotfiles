@@ -4,6 +4,19 @@
   home.homeDirectory = "/home/arik";
   home.stateVersion = "25.05";
 
+   #Have to use this command:
+    #home-manager switch --flake . --impure
+
+  #found out from 
+    #code --verbose ./
+
+  #to use
+    # code ./ --no-sandbox
+
+  #Also need this command on nu
+    #$env.NIXPKGS_ALLOW_UNFREE = "1"
+
+
   programs.home-manager.enable = true;
   nixGL.vulkan.enable = true;
 
@@ -27,17 +40,7 @@
           extensions = with pkgs.vscode-extensions; [
             dracula-theme.theme-dracula
             #vscodevim.vim
-            #Have to use this command:
-            #home-manager switch --flake . --impure
-
-            #found out from 
-            #code --verbose ./
-
-            #to use
-            # code ./ --no-sandbox
-
-            #Also need this command on nu
-            #$env.NIXPKGS_ALLOW_UNFREE = "1"
+           
             yzhang.markdown-all-in-one
           ];
         };
