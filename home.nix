@@ -18,7 +18,7 @@
 
 
   programs.home-manager.enable = true;
-  nixGL.vulkan.enable = true;
+  #nixGL.vulkan.enable = true;
 
   # Enable Nushell
   # programs.nushell.enable = true;
