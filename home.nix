@@ -22,22 +22,26 @@
   programs = {
     vscode = {
       enable = true;
-      extensions = with pkgs.vscode-extensions; [
-        dracula-theme.theme-dracula
-        #vscodevim.vim
-        #Have to use this command:
-        #home-manager switch --flake . --impure
+      profiles = {
+        default = {
+          extensions = with pkgs.vscode-extensions; [
+            dracula-theme.theme-dracula
+            #vscodevim.vim
+            #Have to use this command:
+            #home-manager switch --flake . --impure
 
-        #found out from 
-        #code --verbose ./
+            #found out from 
+            #code --verbose ./
 
-        #to use
-        # code ./ --no-sandbox
+            #to use
+            # code ./ --no-sandbox
 
-        #Also need this command on nu
-        #$env.NIXPKGS_ALLOW_UNFREE = "1"
-        yzhang.markdown-all-in-one
-      ];
+            #Also need this command on nu
+            #$env.NIXPKGS_ALLOW_UNFREE = "1"
+            yzhang.markdown-all-in-one
+          ];
+        };
+      };
     };
 
     # zed-editor = {
