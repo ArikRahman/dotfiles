@@ -52,3 +52,7 @@
 ;; (unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
+
+;;(package! gleam-mode
+;;  :recipe (:host github :repo "gleam-lang/gleam-mode")
+;;  :pin "91cf073c5fb889c091b1797f44cc52419b7c9ae2")

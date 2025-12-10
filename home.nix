@@ -128,6 +128,14 @@
     lsof
     bandwhich
     jq
+    basedpyright
+    radio-active
+    elixir
+    gleam
+    erlang
+    rebar3
+    bun
+    fswatch
 
   ];
 
