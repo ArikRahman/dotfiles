@@ -116,11 +116,18 @@
     just
     fzf
     fd
-    ripgrep
+    ripgrep-all
     bat
     dust
     tree
     git
+    delta
+    tldr
+    tokei
+    hyperfine
+    lsof
+    bandwhich
+    jq
 
   ];
 
