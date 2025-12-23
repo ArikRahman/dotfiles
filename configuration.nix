@@ -42,6 +42,8 @@ inputs.home-manager.nixosModules.home-manager
 
     ];
 home-manager.backupFileExtension = "backup";
+home-manager.useUserPackages = true;
+
 programs.steam = {
   enable = true;
   remotePlay.openFirewall = true;          # Optional: Remote Play
@@ -51,6 +53,8 @@ programs.steam = {
       #users.users.arik.isNormalUser = true;
   home-manager.users.arik = { pkgs, ... }: {
     home.packages = with pkgs; [
+    spacedrive
+    neohtop
     gh
    	atool          # Archive extraction tools for many formats
    	httpie         # Human-friendly command-line HTTP client
@@ -231,6 +235,11 @@ programs.steam = {
 
   # Enable the COSMIC desktop environment
   services.desktopManager.cosmic.enable = true;
+  # Enable niri compositor
+  programs.niri = {
+    enable = true;
+    # optional: extraSession = true;  # only if you want an extra entry instead of replacing default
+  };
 
   # Configure keymap in X11
   services.xserver.xkb = {
