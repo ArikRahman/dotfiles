@@ -2,15 +2,20 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ inputs, config, pkgs, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   # Extension function for Firefox
   extension = shortId: guid: {
     name = guid;
     value = {
-      install_url =
-        "https://addons.mozilla.org/en-US/firefox/downloads/latest/${shortId}/latest.xpi";
+      install_url = "https://addons.mozilla.org/en-US/firefox/downloads/latest/${shortId}/latest.xpi";
       installation_mode = "normal_installed";
     };
   };
@@ -98,8 +103,12 @@ in
   users.users.arik = {
     isNormalUser = true;
     description = "arik";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     packages = with pkgs; [ ];
+    shell = pkgs.nushell;
   };
 
   # Steam
@@ -121,8 +130,7 @@ in
       {
         extraPrefs = lib.concatLines (
           lib.mapAttrsToList (
-            name: value:
-              ''lockPref(${lib.strings.toJSON name}, ${lib.strings.toJSON value});''
+            name: value: ''lockPref(${lib.strings.toJSON name}, ${lib.strings.toJSON value});''
           ) prefs
         );
 

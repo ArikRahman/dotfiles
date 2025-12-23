@@ -1,102 +1,70 @@
-{ config, pkgs, lib, inputs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 let
-  # Keep your Doom private config in-repo at ./doom.d (recommended).
-  doomDir = ./doom.d;
-
-  # Convenience
-  isDarwin = pkgs.stdenv.isDarwin;
+  doomPrivateDir = ./.doom.d;
 in
 {
-  ############################################################
-  # Required Home Manager identity
-  ############################################################
+  ############################
+  # Identity
+  ############################
   home.username = "arik";
-  home.homeDirectory = if isDarwin then "/Users/arik" else "/home/arik";
+  home.homeDirectory = "/home/arik";
   home.stateVersion = "25.11";
   programs.home-manager.enable = true;
 
-  ############################################################
-  # XDG + Doom environment (important)
-  ############################################################
-  # This mirrors the working approach described in doomemacs-nix-example:
-  # EMACSDIR in ~/.config/emacs, DOOMDIR in ~/.config/doom, mutable state in XDG data/state. [page:4]
+  ############################
+  # XDG + Doom env vars
+  ############################
   xdg.enable = true;
 
   home.sessionVariables = {
-    # Where Doom's git checkout lives (read-only symlink is fine)
     EMACSDIR = "${config.xdg.configHome}/emacs";
-
-    # Your private Doom config (packages.el, init.el, config.el)
     DOOMDIR = "${config.xdg.configHome}/doom";
-
-    # Writable locations for Doom's package builds/cache/state
     DOOMLOCALDIR = "${config.xdg.dataHome}/doom";
     DOOMPROFILELOADFILE = "${config.xdg.stateHome}/doom-profiles-load.el";
   };
 
-  # Ensure the `doom` script is on PATH as `doom` (it lives in $EMACSDIR/bin). [page:4]
   home.sessionPath = [
     "${config.xdg.configHome}/emacs/bin"
   ];
 
-  ############################################################
-  # Doom Emacs itself (via nix-doom-emacs-unstraightened HM module)
-  ############################################################
+  ############################
+  # Doom Emacs (module)
+  ############################
   programs.doom-emacs = {
     enable = true;
-
-    # This should point at a directory in your repo that contains Doom private config files.
-    # Rename your old ./.doom.d -> ./doom.d (recommended) to avoid hidden-dir weirdness.
-    doomDir = doomDir;
+    doomDir = doomPrivateDir;
   };
 
-  ############################################################
-  # Put Doom’s code and your Doom config into XDG locations
-  ############################################################
+  ############################
+  # Put Doom + config in XDG
+  ############################
+  xdg.configFile."emacs".source = inputs.doomemacs;
+  xdg.configFile."doom".source = doomPrivateDir;
 
-  # 1) Install Doom Emacs source into ~/.config/emacs.
-  # The example repo fetches Doom via Nix into XDG config. [page:4]
-  #
-  # Option A (recommended): pin Doom as a flake input instead of fetchGit.
-  # If you do that, replace this with: xdg.configFile."emacs".source = inputs.doomemacs;
-  #
-  # Option B: fetch Doom directly.
-  xdg.configFile."emacs".source = builtins.fetchGit {
-    url = "https://github.com/doomemacs/doomemacs";
-    # Tip: pin this to a rev after first success for reproducibility.
-    # rev = "....";
-  };
-
-  # 2) Symlink your private Doom config to ~/.config/doom. [page:4]
-  xdg.configFile."doom".source = doomDir;
-
-  ############################################################
-  # Packages (include common Doom dependencies)
-  ############################################################
+  ############################
+  # Packages (single definition)
+  ############################
   home.packages = with pkgs; [
-    # General tooling Doom modules often assume
     git
+    fd
+    (ripgrep.override { withPCRE2 = true; })
+
     gnumake
     cmake
     pkg-config
 
-    # Search/index dependencies commonly used by Doom
-    fd
-    (ripgrep.override { withPCRE2 = true; })
+    emacs-all-the-icons-fonts
+    fontconfig
+    nerd-fonts.fira-code
 
-    # Optional but common quality-of-life
-    unzip
-    zip
-    gnused
-    gawk
-
-    # Nix tooling
-    nixfmt-rfc-style
-    nil
-    nixd
-
-    # Your CLI picks (from your current config)
+    spacedrive
     neohtop
     gh
     atool
@@ -121,45 +89,25 @@ in
     lazygit
     just
     fzf
+
+    nixfmt-rfc-style
+    nil
+    nixd
   ];
 
-  ############################################################
-  # Terminal / shell setup (kept close to what you already had)
-  ############################################################
+  fonts.fontconfig.enable = true;
+
+  ############################
+  # Shells / terminal
+  ############################
+  programs.fish.enable = true;
+
   programs.nushell = {
     enable = true;
-    extraConfig = ''
-      # yazi 'y' alias
-      def --env y [...args] {
-        let tmp = (mktemp -t "yazi-cwd.XXXXXX")
-        yazi ...$args --cwd-file $tmp
-        let cwd = (open $tmp)
-        if $cwd != "" and $cwd != $env.PWD { cd $cwd }
-        rm -fp $tmp
-      }
 
-      let carapace_completer = {|spans|
-        carapace $spans.0 nushell ...$spans | from json
-      }
-
-      $env.config = {
-        show_banner: false,
-        completions: {
-          case_sensitive: false
-          quick: true
-          partial: true
-          algorithm: "fuzzy"
-          external: {
-            enable: true
-            max_results: 100
-            completer: $carapace_completer
-          }
-        }
-      }
-    '';
+    # Use config.nu from this same directory (next to home.nix)
+    configFile.source = ./config.nu; # Home Manager supports configFile.source for Nushell. [web:1][web:17]
   };
-
-  programs.fish.enable = true;
 
   programs.bash = {
     enable = true;
@@ -201,7 +149,7 @@ in
 
   programs.ghostty = {
     enable = true;
-    package = if isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
+    package = pkgs.ghostty;
     enableBashIntegration = true;
     enableFishIntegration = true;
     enableZshIntegration = true;
@@ -222,15 +170,4 @@ in
       };
     };
   };
-
-  ############################################################
-  # Fonts (optional, but helps Doom icon/fonts setups)
-  ############################################################
-  fonts.fontconfig.enable = true;
-
-  home.packages = (home.packages or []) ++ (with pkgs; [
-    fontconfig
-    emacs-all-the-icons-fonts
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
-  ]);
 }

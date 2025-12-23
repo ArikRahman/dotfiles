@@ -10,6 +10,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    doomemacs = {
+      url = "github:doomemacs/doomemacs";
+      flake = false;
+    };
+
     nix-doom-emacs-unstraightened = {
       url = "github:marienz/nix-doom-emacs-unstraightened";
       # Common pattern used in examples: do not force-follow your nixpkgs
