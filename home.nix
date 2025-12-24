@@ -22,7 +22,7 @@ in
   # XDG + Doom env vars
   ############################
   xdg.enable = true;
-
+  xdg.configFile."niri/config.kdl".source = ./config.kdl;
   home.sessionVariables = {
     EMACSDIR = "${config.xdg.configHome}/emacs";
     DOOMDIR = "${config.xdg.configHome}/doom";
@@ -64,12 +64,14 @@ in
     fontconfig
     nerd-fonts.fira-code
 
+    swaybg
     spacedrive
     neohtop
     gh
     atool
     httpie
     discordo
+    legcord
     dust
     delta
     tokei
@@ -89,7 +91,7 @@ in
     lazygit
     just
     fzf
-
+    fuzzel
     nixfmt-rfc-style
     nil
     nixd
@@ -154,15 +156,23 @@ in
     enableFishIntegration = true;
     enableZshIntegration = true;
     settings = {
-      background-opacity = "0.95";
+      background-opacity = "0.9";
+      theme = "Catppuccin Mocha";
     };
   };
+  ##for niri
+  programs.alacritty.enable = true; # Super+T in the default setting (terminal)
+  programs.fuzzel.enable = true; # Super+D in the default setting (app launcher)
+  programs.swaylock.enable = true; # Super+Alt+L in the default setting (screen locker)
+  programs.waybar.enable = true; # launch on startup in the default setting (bar)
+  services.mako.enable = true; # notification daemon
+  services.swayidle.enable = true; # idle management daemon
+  services.polkit-gnome.enable = true; # polkit
 
   programs.zed-editor = {
     enable = true;
     userSettings = {
-      theme = "One Dark";
-      ui_font_size = 16;
+      theme = "Catppuccin Mocha"; # or Latte/Frappe/Macchiato depending on what the extension provides      ui_font_size = 16;
       buffer_font_size = 14;
       terminal = {
         program = "nu";

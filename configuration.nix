@@ -82,6 +82,19 @@ in
     enable = true;
   };
 
+  programs.nix-ld = {
+    enable = true;
+
+    # Minimal set that often fixes Rust/Node-ish helper binaries.
+    # If Zed still errors with "libXYZ.so not found", add the missing libs here.
+    libraries = with pkgs; [
+      stdenv.cc.cc
+      zlib
+      openssl
+      curl
+    ];
+  };
+
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -139,13 +152,34 @@ in
           ExtensionSettings = builtins.listToAttrs extensions;
 
           SearchEngines = {
-            Default = "ddg";
+            Default = "Brave Search";
             Add = [
+              {
+                Name = "Brave Search";
+                URLTemplate = "https://search.brave.com/search?q={searchTerms}";
+                # Optional, but nice to have:
+                SuggestURLTemplate = "https://search.brave.com/api/suggest?q={searchTerms}";
+                Alias = "@br";
+              }
+              {
+                Name = "DuckDuckGo";
+                URLTemplate = "https://duckduckgo.com/?q={searchTerms}";
+                # optional:
+                SuggestURLTemplate = "https://duckduckgo.com/ac/?q={searchTerms}&type=list";
+                Alias = "@d";
+              }
+              {
+                Name = "Perplexity";
+                URLTemplate = "https://www.perplexity.ai/search?s=o&q={searchTerms}";
+                IconURL = "https://www.perplexity.ai/static/icons/favicon.ico";
+                Alias = "@p";
+              }
+
               {
                 Name = "nixpkgs packages";
                 URLTemplate = "https://search.nixos.org/packages?query={searchTerms}";
                 IconURL = "https://wiki.nixos.org/favicon.ico";
-                Alias = "@np";
+                Alias = "@nix";
               }
               {
                 Name = "NixOS options";
