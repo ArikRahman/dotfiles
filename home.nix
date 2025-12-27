@@ -59,11 +59,17 @@ in
     gnumake
     cmake
     pkg-config
+    libdrm
+    wget
+    unzip
 
+    protontricks
     emacs-all-the-icons-fonts
     fontconfig
     nerd-fonts.fira-code
 
+    ayugram-desktop
+    boxflat
     swaybg
     spacedrive
     neohtop
@@ -94,7 +100,9 @@ in
     fuzzel
     nixfmt-rfc-style
     nil
+    syncthing
     nixd
+    ollama
   ];
 
   fonts.fontconfig.enable = true;
@@ -168,6 +176,19 @@ in
   services.mako.enable = true; # notification daemon
   services.swayidle.enable = true; # idle management daemon
   services.polkit-gnome.enable = true; # polkit
+
+  services.emacs = {
+    enable = true;
+
+    # Helps avoid “daemon started too early” issues for GUI frames.
+    startWithUserSession = "graphical";
+
+    # Optional: makes $EDITOR use emacsclient
+    defaultEditor = true;
+
+    # IMPORTANT: use the Emacs package produced by the Doom module
+    package = config.programs.doom-emacs.package;
+  };
 
   programs.zed-editor = {
     enable = true;

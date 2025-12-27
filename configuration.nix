@@ -31,12 +31,23 @@ let
     (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}")
     (extension "darkreader" "addon@darkreader.org")
   ];
+
+  # ADD THIS: build a tiny “package” that contains the udev rules file.
+  boxflatUdev = pkgs.writeTextFile {
+    name = "boxflat-udev-rules";
+    destination = "/etc/udev/rules.d/60-boxflat.rules";
+    text = ''
+      SUBSYSTEM=="tty", KERNEL=="ttyACM*", ATTRS{idVendor}=="346e", ACTION=="add", MODE="0666", TAG+="uaccess"
+    '';
+  };
 in
 {
   imports = [
     ./hardware-configuration.nix
   ];
 
+  # ADD THIS: tell udev to load rules shipped by that package.
+  services.udev.packages = [ boxflatUdev ];
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
@@ -77,6 +88,13 @@ in
   services.displayManager.cosmic-greeter.enable = true;
   services.desktopManager.cosmic.enable = true;
 
+  # Syncthing Example for /etc/nixos/configuration.nix
+  services.syncthing = {
+    enable = true;
+    openDefaultPorts = true; # Open ports in the firewall for Syncthing. (NOTE: this will not open syncthing gui port)
+  };
+  # You can visit http://127.0.0.1:8384/ to configure it through the web interface.
+
   # Niri compositor
   programs.niri = {
     enable = true;
@@ -92,6 +110,7 @@ in
       zlib
       openssl
       curl
+      libdrm
     ];
   };
 
