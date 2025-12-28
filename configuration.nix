@@ -120,17 +120,41 @@ in
   };
 
   services.printing.enable = true;
-
   # Audio (PipeWire)
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
+  # Fix audio buzzing on idle by disabling power saving on the Intel HDA driver
+  boot.extraModprobeConfig = ''
+    options snd_hda_intel power_save=0 power_save_controller=N
+  '';
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+
+    # Fix: prevent ALSA nodes from suspending (common cause of buzz/crackle later)
+    wireplumber.extraConfig."99-disable-suspend" = {
+      "monitor.alsa.rules" = [
+        {
+          matches = [
+            { "node.name" = "~alsa_input.*"; }
+            { "node.name" = "~alsa_output.*"; }
+          ];
+          actions = {
+            update-props = {
+              "session.suspend-timeout-seconds" = 0;
+            };
+          };
+        }
+      ];
+    };
   };
 
+  musnix.enable = true;
+  musnix.kernel.packages = pkgs.linuxPackages_rt;
+  musnix.kernel.realtime = false;
+  musnix.rtcqs.enable = true;
   # Users
   users.users.arik = {
     isNormalUser = true;
@@ -138,6 +162,7 @@ in
     extraGroups = [
       "networkmanager"
       "wheel"
+      "audio"
     ];
     packages = with pkgs; [ ];
     shell = pkgs.nushell;

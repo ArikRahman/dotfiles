@@ -52,6 +52,10 @@ in
   # Packages (single definition)
   ############################
   home.packages = with pkgs; [
+
+    reaper
+    yt-dlp
+
     git
     fd
     (ripgrep.override { withPCRE2 = true; })
@@ -103,6 +107,8 @@ in
     syncthing
     nixd
     ollama
+
+    qbittorrent
   ];
 
   fonts.fontconfig.enable = true;
@@ -187,7 +193,7 @@ in
     defaultEditor = true;
 
     # IMPORTANT: use the Emacs package produced by the Doom module
-    package = config.programs.doom-emacs.package;
+    #package = config.programs.doom-emacs.package;
   };
 
   programs.zed-editor = {
