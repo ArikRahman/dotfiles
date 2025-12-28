@@ -55,6 +55,8 @@ in
 
     reaper
     yt-dlp
+    yabridge
+    yabridgectl
 
     git
     fd
@@ -81,6 +83,8 @@ in
     atool
     httpie
     discordo
+    #dorion
+    # #^ not working rn try again later keep for reference
     legcord
     dust
     delta
