@@ -114,6 +114,7 @@ in
     ollama
 
     qbittorrent
+    signal-desktop
   ];
 
   fonts.fontconfig.enable = true;
