@@ -1,3 +1,4 @@
+# configuration.nix
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
@@ -30,6 +31,12 @@ let
     (extension "ublock-origin" "uBlock0@raymondhill.net")
     (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}")
     (extension "darkreader" "addon@darkreader.org")
+
+    # Harper (Private Grammar Checker)
+    (extension "private-grammar-checker-harper" "harper@writewithharper.com")
+
+    # to add any extension you need the name, then the extension ID, which you can find from firefox debug addons setting
+
   ];
 
   # ADD THIS: build a tiny “package” that contains the udev rules file.
@@ -91,6 +98,11 @@ in
   # Syncthing Example for /etc/nixos/configuration.nix
   services.syncthing = {
     enable = true;
+    user = "arik";
+    group = "users";
+
+    configDir = "/home/arik/.config/syncthing";
+    dataDir = "/home/arik/.local/state/syncthing";
     openDefaultPorts = true; # Open ports in the firewall for Syncthing. (NOTE: this will not open syncthing gui port)
   };
   # You can visit http://127.0.0.1:8384/ to configure it through the web interface.

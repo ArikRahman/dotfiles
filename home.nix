@@ -1,3 +1,4 @@
+#home.nix
 {
   config,
   pkgs,
@@ -198,6 +199,26 @@ in
 
     # IMPORTANT: use the Emacs package produced by the Doom module
     #package = config.programs.doom-emacs.package;
+  };
+
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscodium; # Use VSCodium as the VS Code build. [web:26]
+
+    extensions = with pkgs.vscode-extensions; [
+      catppuccin.catppuccin-vsc # Soothing pastel theme for VSCode. [page:4]
+      # catppuccin.catppuccin-vsc-icons # Optional icon theme. [web:28]
+    ];
+
+    userSettings = {
+      # Theme selection example from Catppuccin’s docs. [page:3]
+      "workbench.colorTheme" = "Catppuccin Mocha";
+
+      # Recommended settings from Catppuccin’s docs. [page:3]
+      "editor.semanticHighlighting.enabled" = true;
+      "terminal.integrated.minimumContrastRatio" = 1;
+      "window.titleBarStyle" = "custom";
+    };
   };
 
   programs.zed-editor = {
