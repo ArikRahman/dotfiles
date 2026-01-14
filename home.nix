@@ -329,10 +329,6 @@ in
     ripgrep-all
     zellij
 
-    clojure
-    clojure-lsp
-    babashka
-    jdk25 # LTS until 2031
     nil
     nixd
     ruff
@@ -347,7 +343,7 @@ in
     babashka
     clojure
     clojure-lsp
-
+    jdk25 # LTS until 2031
     # Rust toolchain (nixpkgs method; pinned by your flake input)
     #
     # Why:
