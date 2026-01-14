@@ -121,6 +121,18 @@ let
 
               }
 
+              {
+
+                Name = "GitHub";
+
+                URLTemplate = "https://github.com/search?q={searchTerms}";
+
+                IconURL = "https://github.com/favicon.ico";
+
+                Alias = "@gh";
+
+              }
+
             ];
 
           };
@@ -269,6 +281,15 @@ in
     };
   };
 
+  programs.bash = {
+    enable = true;
+    bashrcExtra = ''
+      [[ $- == *i* ]] && source -- "$(blesh-share)"/ble.sh --attach=none
+      ...
+      [[ ! ''${BLE_VERSION-} ]] || ble-attach
+    '';
+  };
+
   home.packages = with pkgs; [
     zenWrapped
 
@@ -308,6 +329,8 @@ in
     discordo # terminal discord
     blesh # oh my bash
     fzf
+    eza # modern ls
+    tokei # code counter
     dust # disk space checker like windirstat for windows
     sqlite
     yq # yaml processor and json as well
@@ -326,6 +349,7 @@ in
     nil
     nixd
     marksman
+    fswatch
     ruff # python rust based
     zellij
 

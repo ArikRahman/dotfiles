@@ -68,7 +68,7 @@ Key insight: By reading task_plan.md before each decision, goals stay in the att
 - > z dotfiles; sudo nixos-rebuild switch --flake .#hydenix 
 - ^ command to update nixos
 - i use rga, no rg
-- AI should  use nix flake check to see if it works and compiles, dont nixos rebuild, only user can do that, only nix flake check when AI
+- AI should  use nix flake check to see if it works and compiles, dont nixos rebuild or use git, only user can do that, only nix flake check when AI
 - be conservative about deleting lines, and rather, comment them out and make note of why you are getting rid of them. get rid of clutter and revise comments as necessary though. be precise
 - if i have to do a command, the goal of nix is to make things reproducible. make note of it in appendix.md
 - if you're troubleshooting, use troubleshooting.md to log complex things
