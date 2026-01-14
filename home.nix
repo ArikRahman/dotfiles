@@ -279,7 +279,6 @@ in
     syncthing
     cachix
 
-    blesh
     localsend
 
     #inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -326,18 +325,8 @@ in
     #clojure-lsp
     nil
     nixd
-
-    ripgrep-all
-    zellij
-
-    nil
-    nixd
-    ruff
-    gh
-
     marksman
     ruff # python rust based
-
     zellij
 
     #Language
