@@ -2,6 +2,7 @@
 
 ## Project Overview
 Dotfiles is a NixOS configuration template using Flakes. It allows users to customize their NixOS setup, add packages, and configure themes.
+Using dank-material-shell, niri, and nixos w/ flakes and home manager
 
 =======
 My repo is https://github.com/ArikRahman/dotfiles

@@ -216,6 +216,49 @@ in
   };
   programs.alacritty.enable = true;
 
+  # Fuzzel theming
+  #
+  # Why:
+  # - By default, fuzzel can look like a blinding white box depending on your theme / GTK defaults.
+  # - This pins a dark, readable look directly in Home Manager so it’s consistent.
+  #
+  # What was wrong (symptom):
+  # - fuzzel rejected keys like:
+  #   - `[main].alpha`, `[main].theme`
+  #   - `[main].background-color`, `[main].text-color`, etc.
+  #
+  # What I got wrong earlier:
+  # - I assumed the CLI-flag-style names belonged under `[main]`.
+  #
+  # How I corrected it:
+  # - Per `man fuzzel.ini` for fuzzel 1.13.1, colors live under `[colors]` with keys like:
+  #   `background`, `text`, `match`, `selection`, `selection-text`, `selection-match`, `border`.
+  # - Border geometry belongs under `[border]` (`width`, `radius`).
+  #
+  # NOTE:
+  # - Fuzzel colors are RGBA (8-digit hex), no prefix (RRGGBBAA), e.g. `1d2021ff`.
+  programs.fuzzel = {
+    enable = true;
+
+    settings = {
+      colors = {
+        # Dark, readable palette (roughly gruvbox-dark-ish)
+        background = "1d2021ff";
+        text = "ebdbb2ff";
+        match = "b8bb26ff";
+        selection = "3c3836ff";
+        selection-text = "fbf1c7ff";
+        selection-match = "b8bb26ff";
+        border = "504945ff";
+      };
+
+      border = {
+        width = 2;
+        radius = 10;
+      };
+    };
+  };
+
   programs.git = {
     enable = true;
     lfs.enable = true;
@@ -449,7 +492,7 @@ in
 
     # Niri tooling
     alacritty
-    fuzzel
+    # fuzzel
     # NOTE: Noctalia removed; replaced by DankMaterialShell (DMS) via upstream HM module.
     #swaybg
   ];

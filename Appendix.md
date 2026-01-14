@@ -13,5 +13,37 @@ do Optional: run ```nix flake update nixpkgs``` which will make Unstraightened r
   - `nix.settings.experimental-features = [ "nix-command" "flakes" ];`
 - Validation (reproducible check after config changes): run ```nix flake check``` from the repo root
 
+## Fuzzel config debugging (reproducible)
+When fuzzel errors with `not a valid option`, the `fuzzel.ini` schema (sections/keys) doesn't match your installed fuzzel build. Use these commands to collect ground truth:
+
+- check version:
+  - ```fuzzel --version```
+
+- check which config is being read and whether it parses:
+  - ```fuzzel --check-config```
+  - ```fuzzel --check-config --config ~/.config/fuzzel/fuzzel.ini```
+
+- inspect the generated config:
+  - ```sed -n '1,120p' ~/.config/fuzzel/fuzzel.ini```
+
+- see available styling knobs (CLI flags + expected color format):
+  - ```fuzzel --help | sed -n '1,220p'```
+
+- check documentation for the INI schema (if present):
+  - ```man fuzzel | sed -n '1,240p'```
+
+Minimal schema probes (use temp config files so you can bisect which section/key names are accepted):
+- create a minimal config file:
+  - ```mkdir -p ~/tmp```
+  - ```printf '%s\n' '[colors]' 'background=1d2021ff' > ~/tmp/fuzzel-min.ini```
+  - ```fuzzel --check-config --config ~/tmp/fuzzel-min.ini```
+
+If `[colors]` is rejected, try the same key under `[main]`, and then try underscore variants:
+- ```printf '%s\n' '[main]' 'background_color=1d2021ff' > ~/tmp/fuzzel-min.ini```
+- ```fuzzel --check-config --config ~/tmp/fuzzel-min.ini```
+
+Note:
+- `fuzzel --help` says colors are RGBA (8-digit hex), no prefix, e.g. `1d2021ff` (RRGGBBAA).
+
 - dota 2 audio cuts out whenf inding match, fix with launch option ```-sdlaudiodriver pulse```
 - had to use vscodium and delete existing .config git config file to override and git auth login would apply allowing cli git push to remote
