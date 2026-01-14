@@ -76,6 +76,41 @@
 
 
   '';
+
+  # Syncthing (daemon)
+  #
+  # Why:
+  # - Installing `syncthing` in `home.packages` only provides the CLI/binary; it does NOT keep it running.
+  # - Enabling the NixOS module creates a proper systemd unit (`syncthing@arik.service`) that runs at boot.
+  #
+  # Safe defaults:
+  # - GUI is left at Syncthing defaults (normally localhost:8384). We do NOT expose it to LAN here.
+  # - We do NOT open firewall ports by default. If you want LAN syncing/discovery, toggle
+  #   `openDefaultPorts = true;` below (or add explicit firewall rules).
+  #
+  # What I could have gotten wrong:
+  # - Your desired sync root may not be `/home/arik`. If you prefer a dedicated folder like `/home/arik/Sync`,
+  #   change `dataDir` accordingly.
+  services.syncthing = {
+    enable = true;
+
+    # Run as your normal user (not root).
+    user = "arik";
+    group = "users";
+
+    # Keep state in your home so it's easy to back up/migrate.
+    #
+    # NOTE:
+    # - `configDir` contains device identity/certs and folder config (stateful).
+    # - `dataDir` is where Syncthing stores its index database (not your synced folders by itself).
+    configDir = "/home/arik/.config/syncthing";
+    dataDir = "/home/arik/.local/state/syncthing";
+
+    # LAN sync/discovery ports (TCP/UDP 22000 + UDP 21027).
+    # Default is false here for security; enable if you want other devices on your LAN to connect directly.
+    openDefaultPorts = true;
+  };
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
@@ -186,7 +221,7 @@
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # on your system were taken. It’s perfectly fine and recommended to leave
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).

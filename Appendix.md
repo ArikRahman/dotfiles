@@ -8,6 +8,25 @@ do  ```gh auth login``` to login to github cli
 do  ```gh repo clone ArikRahman/hydenix``` to clone hydenix repo
 do Optional: run ```nix flake update nixpkgs``` which will make Unstraightened reuse more dependencies already on your system.
 
+## Syncthing daemon (reproducible verification)
+After you enable Syncthing via NixOS (systemd unit `syncthing@arik.service`), use these commands to verify it is running and reachable:
+
+- check service status:
+  - ```sudo systemctl status syncthing@arik.service```
+
+- follow logs:
+  - ```sudo journalctl -u syncthing@arik.service -f```
+
+- confirm GUI is listening locally (default is usually 127.0.0.1:8384):
+  - ```ss -tulpn | grep 8384```
+
+- confirm sync port is listening (default TCP/UDP 22000; discovery is typically UDP 21027):
+  - ```ss -tulpn | grep 22000```
+  - ```ss -u -lpn | grep 21027```
+
+- open GUI (local):
+  - ```xdg-open http://127.0.0.1:8384```
+
 ## Nix flakes enablement + validation (reproducible)
 - Flakes + modern CLI are enabled declaratively in `configuration.nix` via:
   - `nix.settings.experimental-features = [ "nix-command" "flakes" ];`

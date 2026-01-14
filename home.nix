@@ -414,6 +414,7 @@ in
     nvd # useful for seeing difference in nix generations. syntax e.g.
     # ```nvd diff /nix/var/nix/profiles/system-31-link /nix/var/nix/profiles/system-30-link```
     gdb # for debugging
+    yazi # file manager
 
     #LSP and language tooling
     #clojure-lsp
