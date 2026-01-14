@@ -297,6 +297,7 @@ in
     logseq
     obs-studio
     webex
+    vscodium-fhs
 
     seahorse
 
