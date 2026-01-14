@@ -284,9 +284,37 @@ in
   programs.bash = {
     enable = true;
     bashrcExtra = ''
-      [[ $- == *i* ]] && source -- "$(blesh-share)"/ble.sh --attach=none
-      ...
-      [[ ! ''${BLE_VERSION-} ]] || ble-attach
+      # ble.sh / Bash integration
+      #
+      # What was wrong (symptom):
+      # - `bash: fg: current: no such job`
+      # - `[ble: exit 1]`
+      #
+      # What I got wrong earlier:
+      # - I treated this like "bash is broken".
+      # How I corrected it:
+      # - `[ble: ...]` indicates ble.sh is active; the issue is the ble.sh init snippet / prompt hooks,
+      #   not bash itself.
+      #
+      # Primary fix:
+      # - Remove the literal `...` (invalid bash).
+      # - Use a single, guarded attach strategy for interactive shells.
+
+      # Previous (kept for history; DO NOT re-enable as-is):
+      # [[ $- == *i* ]] && source -- "$(blesh-share)"/ble.sh --attach=none
+      # ...
+      # [[ ! ''${BLE_VERSION-} ]] || ble-attach
+
+      # Only initialize ble.sh in interactive shells.
+      case "$-" in
+        *i*)
+          # Single-attach initialization (more robust than split attach/attach=none).
+          # If blesh isn't installed or blesh-share isn't available, do nothing.
+          if command -v blesh-share >/dev/null 2>&1; then
+            source -- "$(blesh-share)"/ble.sh
+          fi
+          ;;
+      esac
     '';
   };
 
@@ -394,7 +422,7 @@ in
     clang
 
     uv
-    nim
+    # nim
 
     #jdk25 # jvm will outperform graalvm AOT with implementation of project leydus
     # graalvmPackages.graalvm-ce

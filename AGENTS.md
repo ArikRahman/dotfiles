@@ -18,7 +18,7 @@ My repo is https://github.com/ArikRahman/dotfiles
 - **docs/**: Documentation files.
 
 ## Development Guidelines
-
+- using nu
 - mandatory to use Manus workflow, read below, use folder called manus for documentation for manus worfklow
 - When modifying configuration, prefer editing for home manager, or files in `modules/`.
 - Ensure `flake.nix` is updated if new inputs are required.
