@@ -420,6 +420,9 @@ in
     #clojure-lsp
     nil
     nixd
+    nix-ld
+    package-version-server
+    #Nix tooling ^
     marksman
     fswatch
     ruff # python rust based
