@@ -297,7 +297,7 @@ in
     logseq
     obs-studio
     webex
-    vscodium-fhs
+    vscodium-fhs # nix friendly codium
 
     seahorse
 
