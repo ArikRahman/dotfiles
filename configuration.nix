@@ -14,6 +14,18 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
+
+  # Enable the modern Nix CLI and Flakes (system-wide).
+  #
+  # Why:
+  # - `nix flake ...` requires both `nix-command` and `flakes`.
+  # - Putting this in NixOS config (instead of per-user nix.conf) keeps it reproducible and
+  #   ensures the daemon/CLI behave consistently across users.
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;

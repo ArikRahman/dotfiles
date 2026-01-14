@@ -7,6 +7,11 @@ do  ```nix flake update``` to update flake inputs
 do  ```gh auth login``` to login to github cli
 do  ```gh repo clone ArikRahman/hydenix``` to clone hydenix repo
 do Optional: run ```nix flake update nixpkgs``` which will make Unstraightened reuse more dependencies already on your system.
+
+## Nix flakes enablement + validation (reproducible)
+- Flakes + modern CLI are enabled declaratively in `configuration.nix` via:
+  - `nix.settings.experimental-features = [ "nix-command" "flakes" ];`
 - Validation (reproducible check after config changes): run ```nix flake check``` from the repo root
+
 - dota 2 audio cuts out whenf inding match, fix with launch option ```-sdlaudiodriver pulse```
 - had to use vscodium and delete existing .config git config file to override and git auth login would apply allowing cli git push to remote
