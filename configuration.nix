@@ -17,7 +17,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-
+    backupFileExtension = "backup-2026_01_13-19_33_59";
     # Pass flake inputs into home.nix so `inputs.dms...` works. [web:24]
     extraSpecialArgs = { inherit inputs; };
 
@@ -68,10 +68,10 @@
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
+  services.displayManager.gdm.enable = true;
   services.displayManager.gdm.wayland = true; # [web:201]
 
-  services.xserver.desktopManager.gnome.enable = true;
+  services.desktopManager.gnome.enable = true;
   # Install niri system-wide (so niri + niri-session exist in /run/current-system/sw/bin)
 
   # Make GDM show additional sessions (Wayland/X11) from these packages. [web:114]
@@ -135,7 +135,7 @@
     packages = with pkgs; [
       #  thunderbird
       # git
-      ripgrep-all
+      # ripgrep-all
     ];
   };
 

@@ -7,6 +7,7 @@
 }:
 
 let
+
   extension = shortId: guid: {
     name = guid;
     value = {
@@ -206,7 +207,7 @@ in
   programs.git = {
     enable = true;
     lfs.enable = true;
-    extraConfig = {
+    settings = {
       # Keep HM-managed settings here.
 
       # Allow machine-local, writable overrides:
