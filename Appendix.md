@@ -1,8 +1,25 @@
 ## This is where commands are saved for future reference
 do  ```git config --local credential.helper '!gh auth git-credential'``` to enable github cli authentication for git
 do  ```sudo nixos-rebuild switch --flake .#hydenix ``` to update nixos
-do  ```sudo chown -R hydenix:users /mnt/arik_s_disk/SteamLibrary/steamapps/compatdata``` to fix steam proton prefix ownership issues
+
+## Steam (notes + reproducible checks and commands)
+### Reproducible checks (preferred)
+- after any Nix config change related to Steam/graphics:
+  - ```nix flake check```
+
+- launch Steam from a terminal to capture stdout/stderr (useful when it doesn't open or games instantly quit):
+  - ```steam```
+
+### External drive Steam library (common breakage)
+Ownership (Proton prefixes must be writable):
+do  ```sudo chown -R arik:users '/mnt/arik_s disk/'``` to fix steam proton prefix ownership issues
+
+Mount flags (Proton/games often fail if the library drive is mounted with `noexec`):
 - sometimes have to run ```sudo mount -o remount,exec /mnt/arik_s_disk``` to make games work again because drive mounts with noexec
+
+Note:
+- The long-term reproducible fix is to ensure the filesystem mount is declared with correct options in NixOS so you don't need manual `chown`/`remount` steps each time.
+
 do  ```nix flake update``` to update flake inputs
 do  ```gh auth login``` to login to github cli
 do  ```gh repo clone ArikRahman/hydenix``` to clone hydenix repo
@@ -66,3 +83,5 @@ Note:
 
 - dota 2 audio cuts out whenf inding match, fix with launch option ```-sdlaudiodriver pulse```
 - had to use vscodium and delete existing .config git config file to override and git auth login would apply allowing cli git push to remote
+- ```sudo chown -R arik:users "/run/media/arik/arik_s disk"``` to make external ssd work
+- ```steam -console``` to log steam

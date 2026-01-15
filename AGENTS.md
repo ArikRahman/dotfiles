@@ -32,6 +32,7 @@ My repo is https://github.com/ArikRahman/dotfiles
 - instead of debugging from terminal, dump output into log text file workflow
 - stop deleting lines, and rather, comment them out and make note of why you are getting rid of them
 - use nix flake check to make sure it compiles, no git
+- dont edit my appendix.md thats for me, if you need to make yourself notes those belong in notes and deliverables
 ----------
 Manus workflow - According to manus:
 Why This Skill?

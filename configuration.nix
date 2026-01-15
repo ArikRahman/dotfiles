@@ -10,10 +10,59 @@
 }:
 
 {
+  # Niri X11 app support (Steam, etc.) via xwayland-satellite
+  #
+  # Why:
+  # - niri (since 25.08) integrates with `xwayland-satellite` automatically.
+  # - When available in `$PATH`, niri will:
+  #   - create X11 sockets (e.g. `:0`)
+  #   - export `$DISPLAY`
+  #   - spawn xwayland-satellite on-demand when an X11 client (like Steam) connects
+  # - Without this, X11 apps can fail with errors like:
+  #   “Unable to open a connection to X” / “Check your DISPLAY environment variable…”
+  #
+  # Source: https://yalter.github.io/niri/Xwayland.html
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
+
+  # Steam baseline (system-level)
+  #
+  # Why:
+  # - The NixOS Steam module is the most reliable way to run Steam on NixOS.
+  # - Most Steam/Proton issues on NixOS are missing 32-bit graphics/Vulkan support.
+  #
+  # What this enables:
+  # - Steam client (with runtime) via `programs.steam.enable`
+  # - 32-bit graphics userspace support (required for many games/Proton)
+  programs.steam.enable = true;
+
+  # Enable OpenGL/Vulkan plumbing; many games (and Steam itself) still need 32-bit.
+  #
+  # NOTE:
+  # - On modern NixOS, these are the `hardware.graphics.*` options.
+  # - If you later hit evaluation errors due to option name changes, we can adapt,
+  #   but this is the correct direction on unstable for most setups.
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  # Optional ports:
+  # If you use any of these Steam features, uncomment the relevant line(s).
+  #
+  # Being conservative here (keep firewall changes minimal).
+  # programs.steam.remotePlay.openFirewall = true;
+  # programs.steam.dedicatedServer.openFirewall = true;
+  # programs.steam.localNetworkGameTransfers.openFirewall = true;
+
+  # Helpful utilities for Proton troubleshooting (system-wide).
+  #
+  # NOTE:
+  # - You already have `protontricks` in Home Manager packages; leaving it there is fine.
+  # - Duplicating packages across system + HM isn't harmful, but it's redundant.
+  programs.gamemode.enable = true;
 
   # Enable the modern Nix CLI and Flakes (system-wide).
   #
@@ -197,7 +246,12 @@
   environment.systemPackages = with pkgs; [
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
+
     niri
+
+    # Required for niri’s automatic X11 integration (xwayland-satellite >= 0.7).
+    # It must be available in `$PATH` so niri can spawn it on-demand and export `$DISPLAY`.
+    xwayland-satellite
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
