@@ -214,8 +214,23 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
+  #
+  # LocalSend (phone → PC receive)
+  # Why:
+  # - PC → phone works via outbound connections.
+  # - phone → PC requires inbound access to the LocalSend listening port.
+  #
+  # Port:
+  # - TCP 53317 (from your LocalSend settings)
+  networking.firewall.allowedTCPPorts = [
+    53317
+  ];
+
+  # If discovery still fails (device not found), LocalSend may also require UDP
+  # for discovery/broadcast on your LAN. I’m leaving UDP closed for now to keep
+  # the firewall change minimal; we can open the exact UDP port once confirmed.
   # networking.firewall.allowedUDPPorts = [ ... ];
+
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
