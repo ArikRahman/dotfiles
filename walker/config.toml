@@ -1,0 +1,14 @@
+# Walker configuration (tracked in repo)
+#
+# Home Manager should install this into:
+#   ~/.config/walker/config.toml
+#
+# This file exists so `walker` doesn't exit with:
+#   "Couldn't find config dir in either ~/.config/ or /etc/xdg/."
+
+# Default theme name (see ./themes/arik-dark/style.css)
+theme = "arik-dark"
+
+[placeholders.default]
+input = "Search"
+list = "Results"
