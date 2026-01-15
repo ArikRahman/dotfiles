@@ -197,6 +197,25 @@ in
     #inputs.dms.homeModules.dankMaterialShell.niri
   ];
 
+  # niri config ownership (full ownership: repo is the single source of truth)
+  #
+  # Why:
+  # - Your running niri instance reads `~/.config/niri/config.kdl`.
+  # - DMS appears to have written/overwritten that file (you have `~/.config/niri/config.kdl.dmsbackup...`).
+  # - Editing `dotfiles/config.kdl` won't affect runtime unless Home Manager deploys it to `~/.config/niri/config.kdl`.
+  #
+  # What this does:
+  # - Installs (symlinks) `dotfiles/config.kdl` as `~/.config/niri/config.kdl` declaratively.
+  # - This makes settings like `focus-follows-mouse` and your binds (e.g. `Mod+D`) actually apply.
+  #
+  # What I got wrong earlier:
+  # - I assumed `dotfiles/config.kdl` was already the live config. It isn't.
+  #
+  # How I corrected it:
+  # - Home Manager now owns `~/.config/niri/config.kdl` so the repo config is the active runtime config.
+  xdg.enable = true;
+  xdg.configFile."niri/config.kdl".source = ./config.kdl;
+
   home.username = "arik";
   home.homeDirectory = "/home/arik";
   home.stateVersion = "25.11";
@@ -278,10 +297,21 @@ in
     enableBashIntegration = true;
     enableFishIntegration = true;
     enableZshIntegration = true;
-    # settings = {
-    # background-opacity = "0.9";
-    #  theme = desiredTheme;
-    # };
+
+    # Ghostty doesn't have a dedicated Home Manager option for Nushell
+    # integration (unlike bash/fish/zsh), but you can still:
+    # 1) make Ghostty *launch* Nushell by default via `command`
+    # 2) optionally tell Ghostty what kind of prompt semantics to expect via `shell-integration`
+    #
+    # NOTE: `command` should point to the Nu binary in PATH. If Nu isn't
+    # installed in Home Manager/system yet, you'll need to add `pkgs.nushell`.
+    settings = {
+      command = "nu";
+      # shell-integration = "none";
+
+      background-opacity = "0.7";
+      theme = desiredTheme;
+    };
   };
 
   programs.zoxide = {
@@ -378,6 +408,7 @@ in
     #Applications
     ayugram-desktop
     boxflat
+    localsend
     #swaybg
     spacedrive
     neohtop
