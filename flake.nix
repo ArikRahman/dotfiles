@@ -2,10 +2,10 @@
   description = "NixOS + niri (nixpkgs) + DankMaterialShell";
 
   inputs = {
-  	
+
     zen-browser.url = "github:youwen5/zen-browser-flake";
     zen-browser.inputs.nixpkgs.follows = "nixpkgs";
-  
+
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
@@ -19,14 +19,24 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }:
     let
       system = "x86_64-linux";
     in
     {
       nixosConfigurations.arik = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs; };
+
+        # Expose the flake itself to NixOS modules so they can read revision metadata
+        # like `self.rev` / `self.dirtyRev` (used for `system.configurationRevision`,
+        # `nixos-version`, etc.).
+        specialArgs = { inherit inputs self; };
 
         modules = [
           ./configuration.nix

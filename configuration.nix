@@ -6,10 +6,23 @@
   config,
   pkgs,
   inputs,
+  self,
   ...
 }:
 
 {
+  # Track the exact flake revision that produced this system build.
+  #
+  # Why:
+  # - This makes `nixos-version --configuration-revision` (and related tooling)
+  #   report the git commit of your dotfiles flake when it was built from a commit.
+  # - If the tree is dirty, Nix may expose `self.dirtyRev` instead.
+  #
+  # Notes:
+  # - This reads revision metadata provided by the flake (`self.rev` / `self.dirtyRev`).
+  # - It will be `null` if the flake source doesn’t have revision info available.
+  system.configurationRevision = self.rev or self.dirtyRev or null;
+
   # Niri X11 app support (Steam, etc.) via xwayland-satellite
   #
   # Why:
