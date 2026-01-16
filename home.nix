@@ -290,7 +290,7 @@ in
   };
   #programs.zoxide.enable = true;
   programs.zsh.enable = true;
-
+  programs.zsh.dotDir = "${config.xdg.configHome}/zsh";
   programs.ghostty = {
     enable = true;
     package = pkgs.ghostty;
