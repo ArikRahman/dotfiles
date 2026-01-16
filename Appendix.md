@@ -8,7 +8,7 @@ do  ```sudo nixos-rebuild switch --flake .#hydenix ``` to update nixos
   - ```nix flake check```
 
 - launch Steam from a terminal to capture stdout/stderr (useful when it doesn't open or games instantly quit):
-  - ```steam```
+  - ```steam -console```
 
 ### External drive Steam library (common breakage)
 Ownership (Proton prefixes must be writable):
@@ -85,3 +85,4 @@ Note:
 - had to use vscodium and delete existing .config git config file to override and git auth login would apply allowing cli git push to remote
 - ```sudo chown -R arik:users "/run/media/arik/arik_s disk"``` to make external ssd work
 - ```steam -console``` to log steam
+- also turn on vulkan in background in steam -> settings ->

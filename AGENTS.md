@@ -23,7 +23,7 @@ My repo is https://github.com/ArikRahman/dotfiles
 
 ## Development Guidelines
 - using nu
-- mandatory to use Manus workflow, read below, use folder called manus for documentation for manus worfklow
+- mandatory to use Manus workflow, read below, use folder called manus for documentation for manus worfklow in task subfolder
 - When modifying configuration, prefer editing for home manager, or files in `modules/`.
 - Ensure `flake.nix` is updated if new inputs are required.
 - Follow Nix language best practices.

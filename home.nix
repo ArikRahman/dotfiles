@@ -401,17 +401,16 @@ in
     syncthing
     cachix
 
-    localsend
-
     #inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     #Applications
     ayugram-desktop
     boxflat
-    localsend
+    localsend # airdrop
     #swaybg
     spacedrive
-    neohtop
+    calibre # book manager
+    neohtop # procmon
     nautilus
     obsidian
     qbittorrent
@@ -431,6 +430,7 @@ in
     discordo # terminal discord
     blesh # oh my bash
     fzf
+    fastfetch
     eza # modern ls
     tokei # code counter
     dust # disk space checker like windirstat for windows
