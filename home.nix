@@ -193,8 +193,9 @@ let
 in
 {
   imports = [
-    inputs.dms.homeModules.dank-material-shell
-    # inputs.dms.homeModules.dank-material-shell.niri
+    # NOTE (2026-01-17):
+    # This configuration previously imported an external Home Manager module here.
+    # It has been removed per request. Keeping an empty imports list so Home Manager evaluation remains valid.
   ];
 
   # niri config ownership (full ownership: repo is the single source of truth)
@@ -222,19 +223,8 @@ in
 
   programs.home-manager.enable = true;
 
-  programs.dank-material-shell = {
-    enable = true;
-    # NOTE: `enableClipboard` was removed upstream and now triggers an assertion:
-    # "no longer has any effect; please remove it. This is now built-in in DMS"
-    # So we intentionally omit it here.
-    enableDynamicTheming = true;
-    # Remove this whole block too (it belongs to the niri integration module)
-
-    # niri = {
-    # enableKeybinds = true;
-    # enableSpawn = true;
-    # };
-  };
+  # NOTE (2026-01-17):
+  # A third-party `programs.*` block previously lived here and has been removed per request.
   programs.alacritty.enable = true;
 
   # Fuzzel theming
@@ -529,9 +519,15 @@ in
 
     # Niri tooling
     alacritty
-    quickshell
+    dms-shell
+    # NOTE (2026-01-17):
+    # `quickshell` was previously included as part of a now-removed shell stack.
+    # It has been commented out per request to remove that stack's traces.
+    # If you still want Quickshell for other reasons, re-add it explicitly here.
+    # quickshell
     # fuzzel
-    # NOTE: Noctalia removed; replaced by DankMaterialShell (DMS) via upstream HM module.
+    # NOTE (2026-01-17):
+    # A prior shell-related note was removed here per request; keeping the list tidy and neutral.
     #swaybg
   ];
 

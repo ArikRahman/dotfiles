@@ -1,11 +1,11 @@
 # Dotfiles Project Context for AI Agents, an index for referencing relevant project documents
 A simple, open format for guiding coding agents,
-used by over 60k open-source projects. Not meant for editng agents.md itself unless specified.
+used by over 60k open-source projects. Read only file unless specified.
 
 Think of AGENTS.md as a README for agents: a dedicated, predictable place to provide the context and instructions to help AI coding agents work on your project. Use manus workflow as descibed below to augment AI.
 ## Project Overview
 Dotfiles is a NixOS configuration template using Flakes. It allows users to customize their NixOS setup, add packages, and configure themes.
-Using dank-material-shell, niri, and nixos w/ flakes and home manager
+Using niri and nixos w/ flakes and home manager
 
 =======
 My repo is https://github.com/ArikRahman/dotfiles

@@ -92,7 +92,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "backup-2026_01_13-19_33_59";
-    # Pass flake inputs into home.nix so `inputs.dms...` works. [web:24]
+    # Pass flake inputs into home.nix so Home Manager modules can access `inputs.*` if needed. [web:24]
     extraSpecialArgs = { inherit inputs; };
 
     users.arik = import ./home.nix;
@@ -182,6 +182,33 @@
 
   services.desktopManager.gnome.enable = true;
   # Install niri system-wide (so niri + niri-session exist in /run/current-system/sw/bin)
+
+  # Dank Material Shell (DMS) — Option 1 integration (keep GDM, run DMS in the user session)
+  #
+  # Why:
+  # - You chose "1": keep the existing display manager (GDM) and run DMS as a user-session shell/service.
+  # - This avoids replacing your login stack and is reversible by flipping these booleans back to false.
+  #
+  # Notes / assumptions:
+  # - `dms-shell` is already present in your HM `home.packages` (see `home.nix`), so you may already
+  #   have the binary. Enabling this NixOS module wires up the intended session/service integration.
+  #
+  # What I could have gotten wrong (to adjust after your first rebuild if needed):
+  # - The best systemd user target for your setup. `graphical-session.target` is a common default so
+  #   it starts when the graphical session is considered "up", but depending on how your niri session
+  #   is launched from GDM you may prefer a different target exposed by your session environment.
+  programs.dms-shell = {
+    enable = true;
+
+    # Run DMS via a systemd *user* service so it follows your login session lifecycle.
+    systemd.enable = true;
+
+    # Makes changes take effect cleanly on rebuild by restarting the user service when its unit changes.
+    systemd.restartIfChanged = true;
+
+    # Start DMS as part of the graphical user session.
+    systemd.target = "graphical-session.target";
+  };
 
   # Make GDM show additional sessions (Wayland/X11) from these packages. [web:114]
   services.displayManager.sessionPackages = with pkgs; [

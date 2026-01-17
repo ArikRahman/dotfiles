@@ -1,5 +1,5 @@
 {
-  description = "NixOS + niri (nixpkgs) + DankMaterialShell";
+  description = "NixOS + niri (nixpkgs)";
 
   inputs = {
 
@@ -13,10 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dms = {
-      url = "github:AvengeMedia/DankMaterialShell/stable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
