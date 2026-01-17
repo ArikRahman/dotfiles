@@ -224,7 +224,9 @@ in
 
   programs.dankMaterialShell = {
     enable = true;
-    enableClipboard = true;
+    # NOTE: `enableClipboard` was removed upstream and now triggers an assertion:
+    # "no longer has any effect; please remove it. This is now built-in in DMS"
+    # So we intentionally omit it here.
     enableDynamicTheming = true;
     # Remove this whole block too (it belongs to the niri integration module)
 
