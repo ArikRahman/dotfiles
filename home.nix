@@ -193,8 +193,8 @@ let
 in
 {
   imports = [
-    inputs.dms.homeModules.dankMaterialShell.default
-    #inputs.dms.homeModules.dankMaterialShell.niri
+    inputs.dms.homeModules.dank-material-shell
+    # inputs.dms.homeModules.dank-material-shell.niri
   ];
 
   # niri config ownership (full ownership: repo is the single source of truth)
@@ -222,7 +222,7 @@ in
 
   programs.home-manager.enable = true;
 
-  programs.dankMaterialShell = {
+  programs.dank-material-shell = {
     enable = true;
     # NOTE: `enableClipboard` was removed upstream and now triggers an assertion:
     # "no longer has any effect; please remove it. This is now built-in in DMS"
@@ -529,6 +529,7 @@ in
 
     # Niri tooling
     alacritty
+    quickshell
     # fuzzel
     # NOTE: Noctalia removed; replaced by DankMaterialShell (DMS) via upstream HM module.
     #swaybg
