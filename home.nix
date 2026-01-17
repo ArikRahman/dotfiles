@@ -394,7 +394,7 @@ in
   home.packages = with pkgs; [
     zenWrapped
 
-    brave
+    # brave
     signal-desktop
     github-desktop
     # dorion
