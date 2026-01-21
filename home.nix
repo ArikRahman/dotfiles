@@ -510,27 +510,13 @@ in
 
     protontricks
 
-    # Preferred over screen shaders: hyprsunset uses Hyprland's CTM control,
-    # so the filter won't show up in screenshots / recordings.
-    #
-    # NOTE: Disabled per request to remove hyprsunset from this repo.
-    # hyprsunset
-    # hyprsunsetctl
-    # pkgs.vscode - hydenix's vscode version
-    # pkgs.userPkgs.vscode - your personal nixpkgs version
-
     # Niri tooling
     alacritty
     dms-shell
-    # NOTE (2026-01-17):
-    # `quickshell` was previously included as part of a now-removed shell stack.
-    # It has been commented out per request to remove that stack's traces.
-    # If you still want Quickshell for other reasons, re-add it explicitly here.
-    # quickshell
-    # fuzzel
-    # NOTE (2026-01-17):
-    # A prior shell-related note was removed here per request; keeping the list tidy and neutral.
-    #swaybg
+
+    # Career
+    rendercv
+
   ];
 
 }
