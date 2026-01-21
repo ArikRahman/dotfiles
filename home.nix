@@ -384,6 +384,7 @@ in
   };
 
   home.packages = with pkgs; [
+    #comment about what each package does, don't delete my comments next to each pkg
     zenWrapped
 
     # brave
@@ -448,7 +449,7 @@ in
     #Nix tooling ^
     marksman
     fswatch
-    ruff # python rust based
+    ruff # python lsp rust based
     zellij
 
     #Language
@@ -456,6 +457,7 @@ in
     clojure
     clojure-lsp
     jdk25 # LTS until 2031
+    python3
     # Rust toolchain (nixpkgs method; pinned by your flake input)
     #
     # Why:
@@ -497,7 +499,7 @@ in
     #jdk25 # jvm will outperform graalvm AOT with implementation of project leydus
     # graalvmPackages.graalvm-ce
 
-    pandoc
+    pandoc # haskell based document converter
     #protontricks
 
     #AC prereqs

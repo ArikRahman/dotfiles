@@ -50,7 +50,13 @@
   # - Steam client (with runtime) via `programs.steam.enable`
   # - 32-bit graphics userspace support (required for many games/Proton)
   programs.steam.enable = true;
-
+  programs.nix-ld.enable = true;
+  # Optional, but recommended: add common libs for unpackaged binaries.
+  # programs.nix-ld.libraries = with pkgs; [
+  #   stdenv.cc.cc
+  #   zlib
+  #   zstd
+  # ];
   # Enable OpenGL/Vulkan plumbing; many games (and Steam itself) still need 32-bit.
   #
   # NOTE:
