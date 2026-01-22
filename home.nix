@@ -400,6 +400,7 @@ in
     ayugram-desktop
     boxflat
     localsend # airdrop
+    gimp
     #swaybg
     spacedrive
     calibre # book manager
@@ -413,6 +414,7 @@ in
     obs-studio
     webex
     vscodium-fhs # nix friendly codium
+    file-roller
 
     seahorse
 
@@ -439,6 +441,7 @@ in
     # ```nvd diff /nix/var/nix/profiles/system-31-link /nix/var/nix/profiles/system-30-link```
     gdb # for debugging
     yazi # file manager
+    pandoc # haskell based document converter
 
     #LSP and language tooling
     #clojure-lsp
@@ -499,14 +502,12 @@ in
     #jdk25 # jvm will outperform graalvm AOT with implementation of project leydus
     # graalvmPackages.graalvm-ce
 
-    pandoc # haskell based document converter
     #protontricks
 
     #AC prereqs
     curl
     wget
     unzip
-    pandoc # document converter
 
     protontricks
 
@@ -516,6 +517,10 @@ in
 
     # Career
     rendercv
+
+    # Music
+    yabridge
+    yabridgectl
 
   ];
 
