@@ -521,6 +521,7 @@ in
     # Music
     yabridge
     yabridgectl
+    # libxcb-wm # for bitwig 6 beta 9 compatability
 
   ];
 
