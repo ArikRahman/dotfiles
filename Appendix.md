@@ -86,3 +86,6 @@ Note:
 - ```sudo chown -R arik:users "/run/media/arik/arik_s disk"``` to make external ssd work
 - ```steam -console``` to log steam
 - also turn on vulkan in background in steam -> settings ->
+
+- prune and remove reduancies with ```sudo nix-collect-garbage -d``` 
+- and ```sudo nix-store --optimise```

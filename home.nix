@@ -403,7 +403,7 @@ in
     gimp
     #swaybg
     spacedrive
-    calibre # book manager
+    rustdesk
     neohtop # procmon
     nautilus
     obsidian
@@ -415,6 +415,18 @@ in
     webex
     vscodium-fhs # nix friendly codium
     file-roller
+    qdirstat # the tool kdirstat and windirstat were based on
+
+    #Media
+    calibre # book manager
+    hakuneko # manga
+    kcc
+
+    # Gaming / emulators
+    # duckstation # ps1
+    pcsx2 # pscx2-bin is made for mac precompiled
+    rpcs3 # ps3
+    shadps4
 
     seahorse
 
@@ -425,6 +437,7 @@ in
     discordo # terminal discord
     blesh # oh my bash
     fzf
+    yt-dlp
     fastfetch
     eza # modern ls
     tokei # code counter
@@ -508,6 +521,7 @@ in
     curl
     wget
     unzip
+    zip
 
     protontricks
 
