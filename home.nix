@@ -7,6 +7,15 @@
 }:
 
 let
+  # retroarik = pkgs.retroarch.withCores (
+  #   cores: with cores; [
+  #     beetle-psx-hw
+  #     pcsx2
+  #   ]
+  # );
+
+  # Nix-built cores live here:
+  # retroarikCores = "${retroarik}/lib/retroarch/cores";
 
   extension = shortId: guid: {
     name = guid;
@@ -382,7 +391,7 @@ in
       esac
     '';
   };
-
+  # home.file.".config/retroarch/cores".source = retroarikCores;
   home.packages = with pkgs; [
     #comment about what each package does, don't delete my comments next to each pkg
     zenWrapped
@@ -416,6 +425,10 @@ in
     vscodium-fhs # nix friendly codium
     file-roller
     qdirstat # the tool kdirstat and windirstat were based on
+    czkawka # gui depulicator via czkawka_gui
+
+    #Temp
+    parsec-bin # temporary co-op game client
 
     #Media
     calibre # book manager
@@ -426,7 +439,19 @@ in
     # duckstation # ps1
     pcsx2 # pscx2-bin is made for mac precompiled
     rpcs3 # ps3
-    shadps4
+    shadps4 # wip
+    xenia-canary # xbox
+    # retroarik
+    # (retroarch.withCores (
+    #   cores: with cores; [
+    #     # genesis-plus-gx
+    #     # snes9x
+    #     beetle-psx-hw
+    #     # mame
+    #     # snes9x-gtk
+
+    #   ]
+    # ))
 
     seahorse
 
@@ -522,6 +547,7 @@ in
     wget
     unzip
     zip
+    unar
 
     protontricks
 

@@ -179,6 +179,14 @@
     openDefaultPorts = true;
   };
 
+  # In your NixOS configuration (flake-based)
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true; # Critical for Wayland/Niri input emulation
+    openFirewall = true; # Opens TCP 47984, 47989, 48010 & UDP 47998-48010
+  };
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
