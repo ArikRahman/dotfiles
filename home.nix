@@ -7,15 +7,16 @@
 }:
 
 let
-  # retroarik = pkgs.retroarch.withCores (
-  #   cores: with cores; [
-  #     beetle-psx-hw
-  #     pcsx2
-  #   ]
-  # );
+  retroarik = pkgs.retroarch.withCores (
+    cores: with cores; [
+      beetle-psx-hw
+      pcsx2
+      beetle-saturn
+    ]
+  );
 
   # Nix-built cores live here:
-  # retroarikCores = "${retroarik}/lib/retroarch/cores";
+  retroarikCores = "${retroarik}/lib/retroarch/cores";
 
   extension = shortId: guid: {
     name = guid;
@@ -32,6 +33,7 @@ let
 
   extensions = [
     (extension "ublock-origin" "uBlock0@raymondhill.net")
+    (extension "steamdb" "firefox-extension@steamdb.info")
     (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}")
     (extension "darkreader" "addon@darkreader.org")
     (extension "private-grammar-checker-harper" "harper@writewithharper.com")
@@ -391,7 +393,7 @@ in
       esac
     '';
   };
-  # home.file.".config/retroarch/cores".source = retroarikCores;
+  home.file.".config/retroarch/cores".source = retroarikCores;
   home.packages = with pkgs; [
     #comment about what each package does, don't delete my comments next to each pkg
     zenWrapped
@@ -412,7 +414,8 @@ in
     gimp
     #swaybg
     spacedrive
-    rustdesk
+    rustdesk-flutter
+
     neohtop # procmon
     nautilus
     obsidian
@@ -437,11 +440,15 @@ in
 
     # Gaming / emulators
     # duckstation # ps1
+    # flycast # same gl issue
+    shaderc
     pcsx2 # pscx2-bin is made for mac precompiled
     rpcs3 # ps3
     shadps4 # wip
     xenia-canary # xbox
-    # retroarik
+    retroarik # freaking sucks
+    ryubing # ryujinx nintendo switch revived
+    dolphin-emu
     # (retroarch.withCores (
     #   cores: with cores; [
     #     # genesis-plus-gx
@@ -469,6 +476,7 @@ in
     dust # disk space checker like windirstat for windows
     sqlite
     yq # yaml processor and json as well
+    jq # json parser
     lazygit
     ripgrep-all # rga, ripgrep with extra file format support
     gh
@@ -557,6 +565,9 @@ in
 
     # Career
     rendercv
+
+    #Game Dev
+    # godot_4_6
 
     # Music
     yabridge
