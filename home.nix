@@ -393,6 +393,7 @@ in
       esac
     '';
   };
+  # stdenv = pkgs.clangStdenv;
   home.file.".config/retroarch/cores".source = retroarikCores;
   home.packages = with pkgs; [
     #comment about what each package does, don't delete my comments next to each pkg
@@ -490,7 +491,6 @@ in
     pandoc # haskell based document converter
 
     #LSP and language tooling
-    #clojure-lsp
     nil
     nixd
     nix-ld
@@ -502,9 +502,11 @@ in
     zellij
 
     #Language
+    gnumake
     babashka
     clojure
     clojure-lsp
+    clj-kondo
     jdk25 # LTS until 2031
     python3
     # Rust toolchain (nixpkgs method; pinned by your flake input)
@@ -566,8 +568,8 @@ in
     # Career
     rendercv
 
-    #Game Dev
-    # godot_4_6
+    # Game Dev
+    godot # going to use a custom clojure build
 
     # Music
     yabridge

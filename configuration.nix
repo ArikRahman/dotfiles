@@ -229,8 +229,12 @@
     niri
   ];
 
-  environment.variables."NIXOS_OZONE_WL" = "1";
-  environment.variables."ELECTRON_OZONE_PLATFORM_HINT" = "auto"; # to make github desktop work in niri
+  environment.variables = {
+    # CC = "clang";
+    "NIXOS_OZONE_WL" = "1";
+    "ELECTRON_OZONE_PLATFORM_HINT" = "auto"; # to make github desktop work in niri
+  };
+
   #needs ELECTRON_OZONE_PLATFORM_HINT=auto github-desktop
   # services.greetd = {
   # enable = true;
