@@ -1,78 +1,129 @@
-# configuration.nix
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 {
-  inputs,
   config,
   pkgs,
-  lib,
+  inputs,
+  self,
   ...
 }:
 
-let
-  # Extension function for Firefox
-  extension = shortId: guid: {
-    name = guid;
-    value = {
-      install_url = "https://addons.mozilla.org/en-US/firefox/downloads/latest/${shortId}/latest.xpi";
-      installation_mode = "normal_installed";
-    };
-  };
-
-  prefs = {
-    # Check these out at about:config
-    "extensions.autoDisableScopes" = 0;
-    "extensions.pocket.enabled" = false;
-  };
-
-  extensions = [
-    (extension "ublock-origin" "uBlock0@raymondhill.net")
-    (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}")
-    (extension "darkreader" "addon@darkreader.org")
-
-    # Harper (Private Grammar Checker)
-    (extension "private-grammar-checker-harper" "harper@writewithharper.com")
-
-    # to add any extension you need the name, then the extension ID, which you can find from firefox debug addons setting
-
-  ];
-
-  # ADD THIS: build a tiny “package” that contains the udev rules file.
-  boxflatUdev = pkgs.writeTextFile {
-    name = "boxflat-udev-rules";
-    destination = "/etc/udev/rules.d/60-boxflat.rules";
-    text = ''
-      SUBSYSTEM=="tty", KERNEL=="ttyACM*", ATTRS{idVendor}=="346e", ACTION=="add", MODE="0666", TAG+="uaccess"
-    '';
-  };
-in
 {
+  # Track the exact flake revision that produced this system build.
+  #
+  # Why:
+  # - This makes `nixos-version --configuration-revision` (and related tooling)
+  #   report the git commit of your dotfiles flake when it was built from a commit.
+  # - If the tree is dirty, Nix may expose `self.dirtyRev` instead.
+  #
+  # Notes:
+  # - This reads revision metadata provided by the flake (`self.rev` / `self.dirtyRev`).
+  # - It will be `null` if the flake source doesn’t have revision info available.
+  system.configurationRevision = self.rev or self.dirtyRev or null;
+
+  # Niri X11 app support (Steam, etc.) via xwayland-satellite
+  #
+  # Why:
+  # - niri (since 25.08) integrates with `xwayland-satellite` automatically.
+  # - When available in `$PATH`, niri will:
+  #   - create X11 sockets (e.g. `:0`)
+  #   - export `$DISPLAY`
+  #   - spawn xwayland-satellite on-demand when an X11 client (like Steam) connects
+  # - Without this, X11 apps can fail with errors like:
+  #   “Unable to open a connection to X” / “Check your DISPLAY environment variable…”
+  #
+  # Source: https://yalter.github.io/niri/Xwayland.html
   imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
 
-  # ADD THIS: tell udev to load rules shipped by that package.
-  services.udev.packages = [ boxflatUdev ];
+  # Steam baseline (system-level)
+  #
+  # Why:
+  # - The NixOS Steam module is the most reliable way to run Steam on NixOS.
+  # - Most Steam/Proton issues on NixOS are missing 32-bit graphics/Vulkan support.
+  #
+  # What this enables:
+  # - Steam client (with runtime) via `programs.steam.enable`
+  # - 32-bit graphics userspace support (required for many games/Proton)
+  programs.steam.enable = true;
+  programs.nix-ld.enable = true;
+  # Optional, but recommended: add common libs for unpackaged binaries.
+  # programs.nix-ld.libraries = with pkgs; [
+  #   stdenv.cc.cc
+  #   zlib
+  #   zstd
+  # ];
+  # Enable OpenGL/Vulkan plumbing; many games (and Steam itself) still need 32-bit.
+  #
+  # NOTE:
+  # - On modern NixOS, these are the `hardware.graphics.*` options.
+  # - If you later hit evaluation errors due to option name changes, we can adapt,
+  #   but this is the correct direction on unstable for most setups.
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  # Optional ports:
+  # If you use any of these Steam features, uncomment the relevant line(s).
+  #
+  # Being conservative here (keep firewall changes minimal).
+  # programs.steam.remotePlay.openFirewall = true;
+  # programs.steam.dedicatedServer.openFirewall = true;
+  # programs.steam.localNetworkGameTransfers.openFirewall = true;
+
+  # Helpful utilities for Proton troubleshooting (system-wide).
+  #
+  # NOTE:
+  # - You already have `protontricks` in Home Manager packages; leaving it there is fine.
+  # - Duplicating packages across system + HM isn't harmful, but it's redundant.
+  programs.gamemode.enable = true;
+
+  # Enable the modern Nix CLI and Flakes (system-wide).
+  #
+  # Why:
+  # - `nix flake ...` requires both `nix-command` and `flakes`.
+  # - Putting this in NixOS config (instead of per-user nix.conf) keeps it reproducible and
+  #   ensures the daemon/CLI behave consistently across users.
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
   ];
 
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    backupFileExtension = "backup-2026_01_13-19_33_59";
+    # Pass flake inputs into home.nix so Home Manager modules can access `inputs.*` if needed. [web:24]
+    extraSpecialArgs = { inherit inputs; };
+
+    users.arik = import ./home.nix;
+  };
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.initrd.luks.devices."luks-c8353ab7-a5b2-409d-bbfb-54baff97aca2".device =
-    "/dev/disk/by-uuid/c8353ab7-a5b2-409d-bbfb-54baff97aca2";
+  networking.hostName = "nixos"; # Define your hostname.
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  networking.hostName = "nixos";
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+
+  # Enable networking
   networking.networkmanager.enable = true;
 
+  # Set your time zone.
   time.timeZone = "America/Chicago";
 
+  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -84,183 +135,223 @@ in
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
+  # Fix audio buzzing on idle by disabling power saving on the Intel HDA driver
 
-  # X11 + desktops
-  services.xserver.enable = true;
+  boot.extraModprobeConfig = ''
 
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
 
-  # COSMIC
-  services.displayManager.cosmic-greeter.enable = true;
-  services.desktopManager.cosmic.enable = true;
+    options snd_hda_intel power_save=0 power_save_controller=N
 
-  # Syncthing Example for /etc/nixos/configuration.nix
+
+  '';
+
+  # Syncthing (daemon)
+  #
+  # Why:
+  # - Installing `syncthing` in `home.packages` only provides the CLI/binary; it does NOT keep it running.
+  # - Enabling the NixOS module creates a proper systemd unit (`syncthing@arik.service`) that runs at boot.
+  #
+  # Safe defaults:
+  # - GUI is left at Syncthing defaults (normally localhost:8384). We do NOT expose it to LAN here.
+  # - We do NOT open firewall ports by default. If you want LAN syncing/discovery, toggle
+  #   `openDefaultPorts = true;` below (or add explicit firewall rules).
+  #
+  # What I could have gotten wrong:
+  # - Your desired sync root may not be `/home/arik`. If you prefer a dedicated folder like `/home/arik/Sync`,
+  #   change `dataDir` accordingly.
   services.syncthing = {
     enable = true;
+
+    # Run as your normal user (not root).
     user = "arik";
     group = "users";
 
+    # Keep state in your home so it's easy to back up/migrate.
+    #
+    # NOTE:
+    # - `configDir` contains device identity/certs and folder config (stateful).
+    # - `dataDir` is where Syncthing stores its index database (not your synced folders by itself).
     configDir = "/home/arik/.config/syncthing";
     dataDir = "/home/arik/.local/state/syncthing";
-    openDefaultPorts = true; # Open ports in the firewall for Syncthing. (NOTE: this will not open syncthing gui port)
-  };
-  # You can visit http://127.0.0.1:8384/ to configure it through the web interface.
 
-  # Niri compositor
-  programs.niri = {
+    # LAN sync/discovery ports (TCP/UDP 22000 + UDP 21027).
+    # Default is false here for security; enable if you want other devices on your LAN to connect directly.
+    openDefaultPorts = true;
+  };
+
+  # In your NixOS configuration (flake-based)
+  services.sunshine = {
     enable = true;
+    autoStart = true;
+    capSysAdmin = true; # Critical for Wayland/Niri input emulation
+    openFirewall = true; # Opens TCP 47984, 47989, 48010 & UDP 47998-48010
   };
 
-  programs.nix-ld = {
+  # Enable the X11 windowing system.
+  services.xserver.enable = true;
+
+  # Enable the GNOME Desktop Environment.
+  services.displayManager.gdm.enable = true;
+  services.displayManager.gdm.wayland = true; # [web:201]
+
+  services.desktopManager.gnome.enable = true;
+  # Install niri system-wide (so niri + niri-session exist in /run/current-system/sw/bin)
+
+  # Dank Material Shell (DMS) — Option 1 integration (keep GDM, run DMS in the user session)
+  #
+  # Why:
+  # - You chose "1": keep the existing display manager (GDM) and run DMS as a user-session shell/service.
+  # - This avoids replacing your login stack and is reversible by flipping these booleans back to false.
+  #
+  # Notes / assumptions:
+  # - `dms-shell` is already present in your HM `home.packages` (see `home.nix`), so you may already
+  #   have the binary. Enabling this NixOS module wires up the intended session/service integration.
+  #
+  # What I could have gotten wrong (to adjust after your first rebuild if needed):
+  # - The best systemd user target for your setup. `graphical-session.target` is a common default so
+  #   it starts when the graphical session is considered "up", but depending on how your niri session
+  #   is launched from GDM you may prefer a different target exposed by your session environment.
+  programs.dms-shell = {
     enable = true;
 
-    # Minimal set that often fixes Rust/Node-ish helper binaries.
-    # If Zed still errors with "libXYZ.so not found", add the missing libs here.
-    libraries = with pkgs; [
-      stdenv.cc.cc
-      zlib
-      openssl
-      curl
-      libdrm
-    ];
+    # Run DMS via a systemd *user* service so it follows your login session lifecycle.
+    systemd.enable = true;
+
+    # Makes changes take effect cleanly on rebuild by restarting the user service when its unit changes.
+    systemd.restartIfChanged = true;
+
+    # Start DMS as part of the graphical user session.
+    systemd.target = "graphical-session.target";
   };
 
+  # Make GDM show additional sessions (Wayland/X11) from these packages. [web:114]
+  services.displayManager.sessionPackages = with pkgs; [
+    niri
+  ];
+
+  environment.variables = {
+    # CC = "clang";
+    "NIXOS_OZONE_WL" = "1";
+    "ELECTRON_OZONE_PLATFORM_HINT" = "auto"; # to make github desktop work in niri
+  };
+
+  #needs ELECTRON_OZONE_PLATFORM_HINT=auto github-desktop
+  # services.greetd = {
+  # enable = true;
+  # settings.default_session = {
+  # tuigreet can list Wayland/X11 sessions from these directories. [web:30][web:121]
+  #  command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --sessions /run/current-system/sw/share/wayland-sessions --xsessions /run/current-system/sw/share/xsessions";
+  # user = "greeter";
+  #    };
+  # };
+
+  # Make GDM show additional sessions (Wayland/X11) from these packages. [web:114]
+  #  services.displayManager.sessionPackages = with pkgs; [
+  #   niri
+  #];
+
+  # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
     variant = "";
   };
 
+  # Enable CUPS to print documents.
   services.printing.enable = true;
-  # Audio (PipeWire)
+
+  # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  # Fix audio buzzing on idle by disabling power saving on the Intel HDA driver
-  boot.extraModprobeConfig = ''
-    options snd_hda_intel power_save=0 power_save_controller=N
-  '';
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
 
-    # Fix: prevent ALSA nodes from suspending (common cause of buzz/crackle later)
-    wireplumber.extraConfig."99-disable-suspend" = {
-      "monitor.alsa.rules" = [
-        {
-          matches = [
-            { "node.name" = "~alsa_input.*"; }
-            { "node.name" = "~alsa_output.*"; }
-          ];
-          actions = {
-            update-props = {
-              "session.suspend-timeout-seconds" = 0;
-            };
-          };
-        }
-      ];
-    };
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
   };
 
-  musnix.enable = true;
-  musnix.kernel.packages = pkgs.linuxPackages_rt;
-  musnix.kernel.realtime = false;
-  musnix.rtcqs.enable = true;
-  # Users
+  # Enable touchpad support (enabled default in most desktopManager).
+  # services.xserver.libinput.enable = true;
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.arik = {
     isNormalUser = true;
     description = "arik";
     extraGroups = [
       "networkmanager"
       "wheel"
-      "audio"
     ];
-    packages = with pkgs; [ ];
-    shell = pkgs.nushell;
+    packages = with pkgs; [
+      #  thunderbird
+      # git
+      # ripgrep-all
+    ];
   };
 
-  # Steam
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-    localNetworkGameTransfers.openFirewall = true;
-  };
+  # Install firefox.
+  #  programs.firefox.enable = true;
 
-  # Firefox (plus Zen)
-  programs.firefox.enable = true;
-
+  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
   environment.systemPackages = with pkgs; [
-    (pkgs.wrapFirefox
-      inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.zen-browser-unwrapped
-      {
-        extraPrefs = lib.concatLines (
-          lib.mapAttrsToList (
-            name: value: ''lockPref(${lib.strings.toJSON name}, ${lib.strings.toJSON value});''
-          ) prefs
-        );
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
 
-        extraPolicies = {
-          DisableTelemetry = true;
-          ExtensionSettings = builtins.listToAttrs extensions;
+    niri
 
-          SearchEngines = {
-            Default = "Brave Search";
-            Add = [
-              {
-                Name = "Brave Search";
-                URLTemplate = "https://search.brave.com/search?q={searchTerms}";
-                # Optional, but nice to have:
-                SuggestURLTemplate = "https://search.brave.com/api/suggest?q={searchTerms}";
-                Alias = "@br";
-              }
-              {
-                Name = "DuckDuckGo";
-                URLTemplate = "https://duckduckgo.com/?q={searchTerms}";
-                # optional:
-                SuggestURLTemplate = "https://duckduckgo.com/ac/?q={searchTerms}&type=list";
-                Alias = "@d";
-              }
-              {
-                Name = "Perplexity";
-                URLTemplate = "https://www.perplexity.ai/search?s=o&q={searchTerms}";
-                IconURL = "https://www.perplexity.ai/static/icons/favicon.ico";
-                Alias = "@p";
-              }
-
-              {
-                Name = "nixpkgs packages";
-                URLTemplate = "https://search.nixos.org/packages?query={searchTerms}";
-                IconURL = "https://wiki.nixos.org/favicon.ico";
-                Alias = "@nix";
-              }
-              {
-                Name = "NixOS options";
-                URLTemplate = "https://search.nixos.org/options?query={searchTerms}";
-                IconURL = "https://wiki.nixos.org/favicon.ico";
-                Alias = "@no";
-              }
-              {
-                Name = "NixOS Wiki";
-                URLTemplate = "https://wiki.nixos.org/w/index.php?search={searchTerms}";
-                IconURL = "https://wiki.nixos.org/favicon.ico";
-                Alias = "@nw";
-              }
-              {
-                Name = "noogle";
-                URLTemplate = "https://noogle.dev/q?term={searchTerms}";
-                IconURL = "https://noogle.dev/favicon.ico";
-                Alias = "@ng";
-              }
-            ];
-          };
-        };
-      }
-    )
+    # Required for niri’s automatic X11 integration (xwayland-satellite >= 0.7).
+    # It must be available in `$PATH` so niri can spawn it on-demand and export `$DISPLAY`.
+    xwayland-satellite
   ];
 
-  system.stateVersion = "25.11";
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
+
+  # List services that you want to enable:
+
+  # Enable the OpenSSH daemon.
+  # services.openssh.enable = true;
+
+  # Open ports in the firewall.
+  #
+  # LocalSend (phone → PC receive)
+  # Why:
+  # - PC → phone works via outbound connections.
+  # - phone → PC requires inbound access to the LocalSend listening port.
+  #
+  # Port:
+  # - TCP 53317 (from your LocalSend settings)
+  networking.firewall.allowedTCPPorts = [
+    53317
+  ];
+
+  # If discovery still fails (device not found), LocalSend may also require UDP
+  # for discovery/broadcast on your LAN. I’m leaving UDP closed for now to keep
+  # the firewall change minimal; we can open the exact UDP port once confirmed.
+  # networking.firewall.allowedUDPPorts = [ ... ];
+
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It’s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "25.11"; # Did you read the comment?
+
 }
