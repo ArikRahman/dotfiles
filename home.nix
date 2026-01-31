@@ -207,6 +207,7 @@ in
     # NOTE (2026-01-17):
     # This configuration previously imported an external Home Manager module here.
     # It has been removed per request. Keeping an empty imports list so Home Manager evaluation remains valid.
+    inputs.nix-doom-emacs-unstraightened.hmModule
   ];
 
   # niri config ownership (full ownership: repo is the single source of truth)
@@ -309,7 +310,7 @@ in
     # NOTE: `command` should point to the Nu binary in PATH. If Nu isn't
     # installed in Home Manager/system yet, you'll need to add `pkgs.nushell`.
     settings = {
-      command = "nu";
+      command = "";
       # shell-integration = "none";
 
       background-opacity = "0.7";
@@ -336,6 +337,16 @@ in
 
     # Use config.nu from this same directory (next to home.nix)
     configFile.source = ./config.nu; # Home Manager supports configFile.source for Nushell. [web:1][web:17]
+  };
+
+  programs.doom-emacs = {
+    enable = true;
+    doomDir = ./doom.d;
+  };
+
+  services.emacs = {
+    enable = true;
+    defaultEditor = true;
   };
 
   programs.zed-editor = {
@@ -416,10 +427,11 @@ in
     #swaybg
     spacedrive
     rustdesk-flutter
+    vlc
 
     neohtop # procmon
     nautilus
-    obsidian
+    # obsidian
     qbittorrent
     legcord
     reaper
