@@ -298,26 +298,60 @@ in
   #programs.zoxide.enable = true;
   programs.zsh.enable = true;
   programs.zsh.dotDir = "${config.xdg.configHome}/zsh";
-  programs.ghostty = {
+  #   programs.ghostty = {
+  #     enable = true;
+  #     package = pkgs.ghostty;
+  #     enableBashIntegration = true;
+  #     enableFishIntegration = true;
+  #     enableZshIntegration = true;
+  #
+  #     # Ghostty doesn't have a dedicated Home Manager option for Nushell
+  #     # integration (unlike bash/fish/zsh), but you can still:
+  #     # 1) make Ghostty *launch* Nushell by default via `command`
+  #     # 2) optionally tell Ghostty what kind of prompt semantics to expect via `shell-integration`
+  #     #
+  #     # NOTE: `command` should point to the Nu binary in PATH. If Nu isn't
+  #     # installed in Home Manager/system yet, you'll need to add `pkgs.nushell`.
+  #     settings = {
+  #       command = "nu";
+  #       # shell-integration = "none";
+  #
+  #       background-opacity = "0.7";
+  #       theme = desiredTheme;
+  #     };
+  #
+
+  programs.foot = {
     enable = true;
-    package = pkgs.ghostty;
-    enableBashIntegration = true;
-    enableFishIntegration = true;
-    enableZshIntegration = true;
-
-    # Ghostty doesn't have a dedicated Home Manager option for Nushell
-    # integration (unlike bash/fish/zsh), but you can still:
-    # 1) make Ghostty *launch* Nushell by default via `command`
-    # 2) optionally tell Ghostty what kind of prompt semantics to expect via `shell-integration`
-    #
-    # NOTE: `command` should point to the Nu binary in PATH. If Nu isn't
-    # installed in Home Manager/system yet, you'll need to add `pkgs.nushell`.
+    server.enable = true; # Enable foot server for faster startup
     settings = {
-      command = "nu";
-      # shell-integration = "none";
-
-      background-opacity = "0.7";
-      theme = desiredTheme;
+      main = {
+        term = "xterm-256color";
+        font = "monospace:size=11";
+        shell = "nu"; # Use Nushell as requested
+      };
+      colors = {
+        alpha = 0.7;
+        # Catppuccin Mocha
+        foreground = "cdd6f4";
+        background = "1e1e2e";
+        regular0 = "45475a";
+        regular1 = "f38ba8";
+        regular2 = "a6e3a1";
+        regular3 = "f9e2af";
+        regular4 = "89b4fa";
+        regular5 = "f5c2e7";
+        regular6 = "94e2d5";
+        regular7 = "bac2de";
+        bright0 = "585b70";
+        bright1 = "f38ba8";
+        bright2 = "a6e3a1";
+        bright3 = "f9e2af";
+        bright4 = "89b4fa";
+        bright5 = "f5c2e7";
+        bright6 = "94e2d5";
+        bright7 = "a6adc8";
+      };
     };
   };
 
