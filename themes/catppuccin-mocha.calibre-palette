@@ -1,0 +1,97 @@
+{
+  "dark": {
+    "use_custom": true,
+    "palette": {
+      "Window": "#1e1e2e",
+      "Window-disabled": "#1e1e2e",
+
+      "WindowText": "#cdd6f4",
+      "WindowText-disabled": "#7f849c",
+
+      "Base": "#181825",
+      "Base-disabled": "#181825",
+
+      "AlternateBase": "#313244",
+      "AlternateBase-disabled": "#313244",
+
+      "Text": "#cdd6f4",
+      "Text-disabled": "#7f849c",
+
+      "PlaceholderText": "#a6adc8",
+      "PlaceholderText-disabled": "#6c7086",
+
+      "Button": "#313244",
+      "Button-disabled": "#313244",
+
+      "ButtonText": "#cdd6f4",
+      "ButtonText-disabled": "#7f849c",
+
+      "ToolTipBase": "#11111b",
+      "ToolTipBase-disabled": "#11111b",
+
+      "ToolTipText": "#cdd6f4",
+      "ToolTipText-disabled": "#bac2de",
+
+      "Highlight": "#89b4fa",
+      "HighlightedText": "#1e1e2e",
+      "HighlightedText-disabled": "#313244",
+
+      "Link": "#89b4fa",
+      "Link-disabled": "#a6adc8",
+
+      "LinkVisited": "#89b4fa",
+      "LinkVisited-disabled": "#7f849c",
+
+      "BrightText": "#cdd6f4",
+      "BrightText-disabled": "#7f849c"
+    }
+  },
+
+  "light": {
+    "use_custom": true,
+    "palette": {
+      "Window": "#1e1e2e",
+      "Window-disabled": "#1e1e2e",
+
+      "WindowText": "#cdd6f4",
+      "WindowText-disabled": "#7f849c",
+
+      "Base": "#181825",
+      "Base-disabled": "#181825",
+
+      "AlternateBase": "#313244",
+      "AlternateBase-disabled": "#313244",
+
+      "Text": "#cdd6f4",
+      "Text-disabled": "#7f849c",
+
+      "PlaceholderText": "#a6adc8",
+      "PlaceholderText-disabled": "#6c7086",
+
+      "Button": "#313244",
+      "Button-disabled": "#313244",
+
+      "ButtonText": "#cdd6f4",
+      "ButtonText-disabled": "#7f849c",
+
+      "ToolTipBase": "#11111b",
+      "ToolTipBase-disabled": "#11111b",
+
+      "ToolTipText": "#cdd6f4",
+      "ToolTipText-disabled": "#bac2de",
+
+      "Highlight": "#89b4fa",
+      "HighlightedText": "#1e1e2e",
+      "HighlightedText-disabled": "#313244",
+
+      "Link": "#89b4fa",
+      "Link-disabled": "#a6adc8",
+
+      "LinkVisited": "#89b4fa",
+      "LinkVisited-disabled": "#7f849c",
+
+      "BrightText": "#cdd6f4",
+      "BrightText-disabled": "#7f849c"
+    }
+  }
+}

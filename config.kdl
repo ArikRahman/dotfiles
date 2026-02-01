@@ -372,7 +372,10 @@ binds {
     Mod+A hotkey-overlay-title="Run an Application: Spotlight" {
           spawn "dms" "ipc" "call" "spotlight" "toggle";
       }
-    Mod+N hotkey-overlay-title="Open DMS Notepad" { spawn "dms" "notepad"; }
+    Mod+N hotkey-overlay-title="Run an Application: Notepad" {
+          spawn "dms" "ipc" "call" "notepad" "toggle";
+      }
+
     Super+space hotkey-overlay-title="Run an Application: walker" { spawn "walker"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
