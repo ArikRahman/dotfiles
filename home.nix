@@ -310,7 +310,7 @@ in
     # NOTE: `command` should point to the Nu binary in PATH. If Nu isn't
     # installed in Home Manager/system yet, you'll need to add `pkgs.nushell`.
     settings = {
-      command = "";
+      command = "nu";
       # shell-integration = "none";
 
       background-opacity = "0.7";
@@ -368,6 +368,13 @@ in
     };
   };
 
+  programs.zellij = {
+    enable = true;
+    settings = {
+      theme = "catppuccin-mocha";
+    };
+  };
+
   programs.bash = {
     enable = true;
     bashrcExtra = ''
@@ -406,6 +413,10 @@ in
   };
   # stdenv = pkgs.clangStdenv;
   home.file.".config/retroarch/cores".source = retroarikCores;
+  home.file.".local/share/godot/export_templates/${
+    builtins.replaceStrings [ "-" ] [ "." ] pkgs.godot_4-export-templates-bin.version
+  }".source =
+    pkgs.godot_4-export-templates-bin;
   home.packages = with pkgs; [
     #comment about what each package does, don't delete my comments next to each pkg
     zenWrapped
@@ -490,6 +501,7 @@ in
     sqlite
     yq # yaml processor and json as well
     jq # json parser
+    fd # Rust upgrade to find
     lazygit
     ripgrep-all # rga, ripgrep with extra file format support
     gh
@@ -511,7 +523,6 @@ in
     marksman
     fswatch
     ruff # python lsp rust based
-    zellij
 
     #Language
     gnumake
