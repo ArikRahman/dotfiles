@@ -328,7 +328,8 @@ in
       main = {
         term = "xterm-256color";
         font = "monospace:size=11";
-        shell = "nu"; # Use Nushell as requested
+        # Launch zellij on foot startup, which will use nu as the default shell
+        shell = "zellij";
       };
       colors = {
         alpha = 0.7;
@@ -409,6 +410,18 @@ in
     enable = true;
     settings = {
       theme = "catppuccin-mocha";
+      # Configure zellij to use nushell as the default shell
+      # This ensures all new panes and tabs launch with nu instead of the system default
+      default_shell = "nu";
+      # Disable startup tips
+      ui.pane_frames.hide_session_name = true;
+      plugins.compact-bar = {
+        hide_floating_panes = true;
+      };
+      tips = {
+        enabled = false;
+      };
+
     };
   };
 
