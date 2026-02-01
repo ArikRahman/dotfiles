@@ -87,5 +87,6 @@ Note:
 - ```steam -console``` to log steam
 - also turn on vulkan in background in steam -> settings ->
 
-- prune and remove reduancies with ```sudo nix-collect-garbage -d``` 
+- prune and remove reduancies with ```sudo nix-collect-garbage -d```
 - and ```sudo nix-store --optimise```
+- change default calibre icons to be more modern and visually appealing

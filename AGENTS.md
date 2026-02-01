@@ -1,15 +1,17 @@
 # Dotfiles Project Context for AI Agents, an index for referencing relevant project documents
+
 A simple, open format for guiding coding agents,
 used by over 60k open-source projects. Read only file unless specified.
 
 Think of AGENTS.md as a README for agents: a dedicated, predictable place to provide the context and instructions to help AI coding agents work on your project. Use manus workflow as descibed below to augment AI.
+
 ## Project Overview
+
 Dotfiles is a NixOS configuration template using Flakes. It allows users to customize their NixOS setup, add packages, and configure themes.
 Using niri and nixos w/ flakes and home manager
 
 =======
 My repo is https://github.com/ArikRahman/dotfiles
-
 
 ## Key Files and Directories
 
@@ -22,6 +24,7 @@ My repo is https://github.com/ArikRahman/dotfiles
 - **docs/**: Documentation files.
 
 ## Development Guidelines
+
 - using nu
 - edit in place
 - mandatory to use Manus workflow, read below, use folder called manus for documentation for manus worfklow in task subfolder
@@ -34,7 +37,9 @@ My repo is https://github.com/ArikRahman/dotfiles
 - stop deleting lines, and rather, comment them out and make note of why you are getting rid of them
 - use nix flake check to make sure it compiles, no git
 - dont edit my appendix.md thats for me, if you need to make yourself notes those belong in notes and deliverables
-----------
+
+---
+
 Manus workflow - According to manus:
 Why This Skill?
 
@@ -57,9 +62,9 @@ The Solution: 3-File Pattern
 
 For every complex task, create THREE files in a task subfolder:
 
-task_plan.md      → Track phases and progress
-notes.md          → Store research and findings, only in notes.md, not a separate findings file
-[deliverable].md  → Final output
+task_plan.md → Track phases and progress
+notes.md → Store research and findings, only in notes.md, not a separate findings file
+[deliverable].md → Final output
 
 The Loop
 
@@ -67,26 +72,26 @@ The Loop
 2. Research → save to notes.md → update task_plan.md
 3. Read notes.md → create deliverable → update task_plan.md
 4. Deliver final output
-------------
+
+---
+
 Key insight: By reading task_plan.md before each decision, goals stay in the attention window. This is how Manus handles ~50 tool calls without losing track.
 
-
-- > z dotfiles; sudo nixos-rebuild switch --flake .#hydenix 
+- > z dotfiles; sudo nixos-rebuild switch --flake .#hydenix
 - ^ command to update nixos
 - i use rga, no rg
-- AI should  use nix flake check to see if it works and compiles, dont nixos rebuild or use git, only user can do that, only nix flake check when AI
+- AI should use nix flake check to see if it works and compiles, dont nixos rebuild or use git, only user can do that, only nix flake check when AI
 - be conservative about deleting lines, and rather, comment them out and make note of why you are getting rid of them. get rid of clutter and revise comments as necessary though. be precise
 - if i have to do a command, the goal of nix is to make things reproducible. make note of it in appendix.md
 - if you're troubleshooting, use troubleshooting.md to log complex things
-- im using nushell btw. use semicolons and other nushell syntax 
+- im using nushell btw. use semicolons and other nushell syntax
 
 ## Decision Log / Gotchas
 
-
-- > z hydenix; sudo nixos-rebuild switch --flake .#hydenix 
+- > z hydenix; sudo nixos-rebuild switch --flake .#hydenix
 - ^ command to update nixos
 - personal notes
-  - to make external drive work, may have to ```sudo chown -R hydenix:users /mnt/arik_s_disk/SteamLibrary/steamapps/compatdata```
-  -dota 2 audio cuts out whenf inding match, fix with launch option ```-sdlaudiodriver pulse```
+- to make external drive work, may have to `sudo chown -R hydenix:users /mnt/arik_s_disk/SteamLibrary/steamapps/compatdata`
+  -dota 2 audio cuts out whenf inding match, fix with launch option `-sdlaudiodriver pulse`
 - if new files or directories are made, will have to lazygit and stage and commit them or nix flake check will fail
-- increment ```backupFileExtension = "backup_date_time";``` and increment it when clobbering might happen
+- increment `backupFileExtension = "backup_date_time";` and increment it when clobbering might happen

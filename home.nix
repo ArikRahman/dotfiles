@@ -563,6 +563,7 @@ in
     gdb # for debugging
     yazi # file manager
     pandoc # haskell based document converter
+    prek # better pre-commit (built with Rust.)
 
     #LSP and language tooling
     nil

@@ -32,12 +32,14 @@ A NixOS configuration template using Flakes, designed to allow users to customiz
 ## Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/ArikRahman/dotfiles.git
    cd dotfiles
    ```
 
 2. Customize the configuration files as needed:
+
    - Edit `configuration.nix` for system-wide settings.
    - Edit `home.nix` for user-specific configurations.
    - Modify modules in `modules/` for additional customizations.
@@ -45,6 +47,7 @@ A NixOS configuration template using Flakes, designed to allow users to customiz
 3. Generate or update `hardware-configuration.nix` if necessary (usually done during NixOS installation).
 
 4. Build and switch to the new configuration:
+
    ```bash
    sudo nixos-rebuild switch --flake .#hydenix
    ```
@@ -54,6 +57,7 @@ A NixOS configuration template using Flakes, designed to allow users to customiz
 ## Usage
 
 - To apply changes, run the rebuild command:
+
   ```bash
   sudo nixos-rebuild switch --flake .#hydenix
   ```
