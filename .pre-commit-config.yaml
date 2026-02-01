@@ -62,15 +62,22 @@ repos:
     hooks:
       - id: prettier
         types_or: [json, yaml, markdown]
+        files: |
+          (?x)^(
+            .*\.org|
+            .*\.md|
+            .*\.json|
+            .*\.ya?ml
+          )$
         stages: [commit]
         name: prettier
-        description: Format JSON, YAML, and Markdown files
+        description: Format JSON, YAML, Markdown, and Org files
         # Exclude machine-generated files and personal docs
         exclude: |
           (?x)^(
             flake\.lock|
             hardware-configuration\.nix|
-            Appendix\.md
+            Appendix\.org
           )$
 
 # Global configuration
