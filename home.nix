@@ -17,6 +17,9 @@ let
 
   # Nix-built cores live here:
   retroarikCores = "${retroarik}/lib/retroarch/cores";
+  #Godot
+  ver = builtins.replaceStrings [ "-" ] [ "." ] pkgs.godot_4-export-templates-bin.version;
+  tpl = "${pkgs.godot_4-export-templates-bin}/share/godot/export_templates/${ver}";
 
   extension = shortId: guid: {
     name = guid;
@@ -413,10 +416,10 @@ in
   };
   # stdenv = pkgs.clangStdenv;
   home.file.".config/retroarch/cores".source = retroarikCores;
-  home.file.".local/share/godot/export_templates/${
-    builtins.replaceStrings [ "-" ] [ "." ] pkgs.godot_4-export-templates-bin.version
-  }".source =
-    pkgs.godot_4-export-templates-bin;
+  home.file.".local/share/godot/export_templates/${ver}" = {
+    source = tpl;
+    recursive = true;
+  };
   home.packages = with pkgs; [
     #comment about what each package does, don't delete my comments next to each pkg
     zenWrapped
