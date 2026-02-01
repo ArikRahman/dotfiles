@@ -378,6 +378,19 @@ in
     };
   };
 
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscodium-fhs;
+    profiles.default = {
+      extensions = [
+        pkgs.vscode-extensions.catppuccin.catppuccin-vsc
+      ];
+      userSettings = {
+        "workbench.colorTheme" = desiredTheme;
+      };
+    };
+  };
+
   programs.bash = {
     enable = true;
     bashrcExtra = ''
@@ -596,6 +609,7 @@ in
 
     # Game Dev
     godot # going to use a custom clojure build
+    # cacert # thought i needed it for TLS patch for networking capability but it's actually a problem fixed in godot 4.6
 
     # Music
     yabridge
