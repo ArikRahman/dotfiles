@@ -413,14 +413,9 @@ in
       # Configure zellij to use nushell as the default shell
       # This ensures all new panes and tabs launch with nu instead of the system default
       default_shell = "nu";
-      # Disable startup tips
+      show_startup_tips = false;
+
       ui.pane_frames.hide_session_name = true;
-      plugins.compact-bar = {
-        hide_floating_panes = true;
-      };
-      tips = {
-        enabled = false;
-      };
 
     };
   };
