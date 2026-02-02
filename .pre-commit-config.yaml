@@ -1,0 +1,85 @@
+# prek pre-commit configuration for dotfiles repository
+# Maintains code quality by running linters and formatters on commit
+#
+# Usage:
+#   prek install              - Install git hooks
+#   prek run --all-files      - Run all hooks on all files
+#   prek run                  - Run hooks on staged files
+
+repos:
+  # Standard pre-commit hooks for general file quality
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # Detect private keys and credentials
+      - id: detect-private-key
+        stages: [commit]
+
+      # Fix trailing whitespace
+      - id: trailing-whitespace
+        stages: [commit]
+
+      # Normalize line endings to LF
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+        stages: [commit]
+
+      # Validate JSON files
+      - id: check-json
+        stages: [commit]
+
+      # Validate YAML files
+      - id: check-yaml
+        stages: [commit]
+        args: ["--unsafe"]
+
+      # Validate TOML files
+      - id: check-toml
+        stages: [commit]
+
+      # Ensure files end with a newline
+      - id: end-of-file-fixer
+        stages: [commit]
+
+      # Check for merge conflicts
+      - id: check-merge-conflict
+        stages: [commit]
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.32.0
+    hooks:
+      - id: yamllint
+        args:
+          ["--config-data", "{extends: default, rules: {line-length: disable}}"]
+        stages: [commit]
+        name: yamllint
+        description: Lint YAML files
+
+  # Prettier for formatting JSON/YAML/Markdown
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.3
+    hooks:
+      - id: prettier
+        types_or: [json, yaml, markdown]
+        files: |
+          (?x)^(
+            .*\.org|
+            .*\.md|
+            .*\.json|
+            .*\.ya?ml
+          )$
+        stages: [commit]
+        name: prettier
+        description: Format JSON, YAML, Markdown, and Org files
+        # Exclude machine-generated files and personal docs
+        exclude: |
+          (?x)^(
+            flake\.lock|
+            hardware-configuration\.nix|
+            Appendix\.org
+          )$
+
+# Global configuration
+default_stages: [commit]
+fail_fast: false

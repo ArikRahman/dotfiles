@@ -17,6 +17,9 @@ let
 
   # Nix-built cores live here:
   retroarikCores = "${retroarik}/lib/retroarch/cores";
+  #Godot
+  ver = builtins.replaceStrings [ "-" ] [ "." ] pkgs.godot_4-export-templates-bin.version;
+  tpl = "${pkgs.godot_4-export-templates-bin}/share/godot/export_templates/${ver}";
 
   extension = shortId: guid: {
     name = guid;
@@ -295,26 +298,61 @@ in
   #programs.zoxide.enable = true;
   programs.zsh.enable = true;
   programs.zsh.dotDir = "${config.xdg.configHome}/zsh";
-  programs.ghostty = {
+  #   programs.ghostty = {
+  #     enable = true;
+  #     package = pkgs.ghostty;
+  #     enableBashIntegration = true;
+  #     enableFishIntegration = true;
+  #     enableZshIntegration = true;
+  #
+  #     # Ghostty doesn't have a dedicated Home Manager option for Nushell
+  #     # integration (unlike bash/fish/zsh), but you can still:
+  #     # 1) make Ghostty *launch* Nushell by default via `command`
+  #     # 2) optionally tell Ghostty what kind of prompt semantics to expect via `shell-integration`
+  #     #
+  #     # NOTE: `command` should point to the Nu binary in PATH. If Nu isn't
+  #     # installed in Home Manager/system yet, you'll need to add `pkgs.nushell`.
+  #     settings = {
+  #       command = "nu";
+  #       # shell-integration = "none";
+  #
+  #       background-opacity = "0.7";
+  #       theme = desiredTheme;
+  #     };
+  #
+
+  programs.foot = {
     enable = true;
-    package = pkgs.ghostty;
-    enableBashIntegration = true;
-    enableFishIntegration = true;
-    enableZshIntegration = true;
-
-    # Ghostty doesn't have a dedicated Home Manager option for Nushell
-    # integration (unlike bash/fish/zsh), but you can still:
-    # 1) make Ghostty *launch* Nushell by default via `command`
-    # 2) optionally tell Ghostty what kind of prompt semantics to expect via `shell-integration`
-    #
-    # NOTE: `command` should point to the Nu binary in PATH. If Nu isn't
-    # installed in Home Manager/system yet, you'll need to add `pkgs.nushell`.
+    server.enable = true; # Enable foot server for faster startup
     settings = {
-      command = "";
-      # shell-integration = "none";
-
-      background-opacity = "0.7";
-      theme = desiredTheme;
+      main = {
+        term = "xterm-256color";
+        font = "monospace:size=11";
+        # Launch zellij on foot startup, which will use nu as the default shell
+        shell = "zellij";
+      };
+      colors = {
+        alpha = 0.7;
+        # Catppuccin Mocha
+        foreground = "cdd6f4";
+        background = "1e1e2e";
+        regular0 = "45475a";
+        regular1 = "f38ba8";
+        regular2 = "a6e3a1";
+        regular3 = "f9e2af";
+        regular4 = "89b4fa";
+        regular5 = "f5c2e7";
+        regular6 = "94e2d5";
+        regular7 = "bac2de";
+        bright0 = "585b70";
+        bright1 = "f38ba8";
+        bright2 = "a6e3a1";
+        bright3 = "f9e2af";
+        bright4 = "89b4fa";
+        bright5 = "f5c2e7";
+        bright6 = "94e2d5";
+        bright7 = "a6adc8";
+      };
     };
   };
 
@@ -368,6 +406,38 @@ in
     };
   };
 
+  programs.zellij = {
+    enable = true;
+    settings = {
+      theme = "catppuccin-mocha";
+      # Configure zellij to use nushell as the default shell
+      # This ensures all new panes and tabs launch with nu instead of the system default
+      default_shell = "nu";
+      # Disable startup tips
+      ui.pane_frames.hide_session_name = true;
+      plugins.compact-bar = {
+        hide_floating_panes = true;
+      };
+      tips = {
+        enabled = false;
+      };
+
+    };
+  };
+
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscodium-fhs;
+    profiles.default = {
+      extensions = [
+        pkgs.vscode-extensions.catppuccin.catppuccin-vsc
+      ];
+      userSettings = {
+        "workbench.colorTheme" = desiredTheme;
+      };
+    };
+  };
+
   programs.bash = {
     enable = true;
     bashrcExtra = ''
@@ -406,6 +476,10 @@ in
   };
   # stdenv = pkgs.clangStdenv;
   home.file.".config/retroarch/cores".source = retroarikCores;
+  home.file.".local/share/godot/export_templates/${ver}" = {
+    source = tpl;
+    recursive = true;
+  };
   home.packages = with pkgs; [
     #comment about what each package does, don't delete my comments next to each pkg
     zenWrapped
@@ -490,6 +564,7 @@ in
     sqlite
     yq # yaml processor and json as well
     jq # json parser
+    fd # Rust upgrade to find
     lazygit
     ripgrep-all # rga, ripgrep with extra file format support
     gh
@@ -501,6 +576,7 @@ in
     gdb # for debugging
     yazi # file manager
     pandoc # haskell based document converter
+    prek # better pre-commit (built with Rust.)
 
     #LSP and language tooling
     nil
@@ -511,7 +587,6 @@ in
     marksman
     fswatch
     ruff # python lsp rust based
-    zellij
 
     #Language
     gnumake
@@ -582,6 +657,7 @@ in
 
     # Game Dev
     godot # going to use a custom clojure build
+    # cacert # thought i needed it for TLS patch for networking capability but it's actually a problem fixed in godot 4.6
 
     # Music
     yabridge
